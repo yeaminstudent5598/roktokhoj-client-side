@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import SocialLogin from "../../Shared/Social/SocialLogin";
+
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
@@ -60,30 +60,39 @@ const SignUp = () => {
     try {
       const imageFile = new FormData();
       imageFile.append("image", data.image[0]);
-
+  
       const res = await axiosPublic.post(image_hosting_api, imageFile, {
         headers: {
           "content-type": "multipart/form-data",
         },
       });
-
+  
       const imageUrl = res.data.data.display_url;
-
+  
       const result = await createUser(data.email, data.password);
       const loggedUser = result.user;
-
+  
       await updateUserProfile(data.name, imageUrl);
-
+  
+      // Find the district name using the district ID
+      const district = districtData.find(
+        (district) => district.id === data.district
+      );
+      const districtName = district ? district.name : "Unknown";
+  
       const userInfo = {
         name: data.name,
         email: data.email,
         bloodGroup: data.bloodGroup,
         upazila: data.upazila,
+        district: districtName, // Use the found district name
         image: imageUrl,
       };
-
+  
+      console.log(userInfo);
+  
       const dbRes = await axiosPublic.post("/users", userInfo);
-
+  
       if (dbRes.data.insertedId) {
         console.log("User profile added to database");
         reset();
@@ -93,6 +102,7 @@ const SignUp = () => {
       console.error("Error during sign-up:", error);
     }
   };
+  
 
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -277,7 +287,7 @@ const SignUp = () => {
               </button>
             </div>
           </form>
-          <SocialLogin />
+         
         </div>
       </div>
     </div>

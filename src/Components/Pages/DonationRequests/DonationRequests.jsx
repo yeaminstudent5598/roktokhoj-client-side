@@ -4,17 +4,18 @@ import useAuth from "../../../Hooks/useAuth"; // Custom hook to get the current 
 import useAxiosPublic from "../../../Hooks/useAxiosPublic"; // Custom hook to use AxiosPublic
 
 const DonationRequests = () => {
-  const { currentUser } = useAuth();
+  const { user, currentUser } = useAuth();
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
-  const [requests, setRequests] = useState([]); // State to hold fetched requests
+  const [requests, setRequests] = useState([]); 
 
   useEffect(() => {
     // Fetch pending blood donation requests from API
     const fetchRequests = async () => {
       try {
         const response = await axiosPublic.get("/create-donation-request"); // API request to get donation data
-        setRequests(response.data); // Update the state with fetched donation requests
+        const pendingRequests = response.data.filter(request => request.status === "pending"); // Filter for pending requests
+        setRequests(pendingRequests); // Update the state with pending requests only
       } catch (error) {
         console.error("Error fetching donation requests:", error);
       }
@@ -24,35 +25,45 @@ const DonationRequests = () => {
   }, [axiosPublic]); // The dependency array ensures the effect runs only once after the initial render
 
   const handleViewRequest = (id) => {
-    if (!currentUser) {
+    if (!user) {
       // If user is not logged in, redirect to the login page
       navigate("/login");
     } else {
       // Navigate to the donation request details page
-      navigate(`/donation-request/${id}`);
+      navigate(`/donation-details/${id}`);
     }
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-center text-2xl font-bold mb-4">Blood Donation Requests</h1>
+    <div className="container pt-20 mx-auto p-6">
+      {/* Top Heading */}
+      <div className="text-center my-6">
+        <h1 className="text-3xl font-bold text-red-600">RoktoKhoj</h1>
+        <p className="text-lg text-gray-700 mt-2">
+          Your Trusted Blood Donation Application
+        </p>
+      </div>
 
+      {/* Section Heading */}
+      <h2 className="text-center text-2xl font-bold mb-6 text-gray-800">
+        Pending Blood Donation Requests
+      </h2>
+
+      {/* Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Map through the requests and display each request in a card */}
         {requests.map((request) => (
           <div
             key={request._id} // Using _id as the key for each request
             className="card border p-4 shadow-md bg-white rounded-lg"
           >
-            <h2 className="font-semibold">{request.recipientName}</h2>
-            <p className="text-sm text-gray-600">Location: {request.fullAddress}</p> {/* Using fullAddress for location */}
+            <h3 className="font-semibold text-lg">{request.recipientName}</h3>
+            <p className="text-sm text-gray-600">Location: {request.recipientDistrict}, {request.recipientUpazila}</p>
+            <p className="text-sm text-gray-600">Hospital: {request.hospitalName} </p>
             <p className="text-sm text-gray-600">Blood Group: {request.bloodGroup}</p>
             <p className="text-sm text-gray-600">
-              Date: {new Date(request.donationDate).toLocaleDateString()} {/* Format date */}
+              Date: {new Date(request.donationDate).toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-600">
-              Time: {new Date(request.donationTime * 1000).toLocaleTimeString()} {/* Convert time to proper format */}
-            </p>
+            <p className="text-sm text-gray-600">Time: {request.donationTime}</p>
             <button
               onClick={() => handleViewRequest(request._id)} // Pass _id to handle view request
               className="btn btn-primary mt-4"

@@ -12,6 +12,15 @@ import Dashboard from "../../Dasboard/Dashboard";
 import AllUsers from "../../Dasboard/AllUsers/AllUsers";
 import AdminProfile from "../../Dasboard/AdminProfile/AdminProfile";
 import CreateDonationRequest from "../../Dasboard/CreateDonationRequest/CreateDonationRequest";
+import DonationRequestDetails from "../Pages/DonationRequests/DonationRequestDetails/DonationRequestDetails";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import AllBloodDonationRequests from "../Pages/DonationRequests/AllBloodDonationRequests/AllBloodDonationRequests";
+import DonorDashboard from "../../Dasboard/DonorDashboard/DonorDashboard";
+import EditDonationRequest from "../../Dasboard/EditDonationRequest/EditDonationRequest";
+import MyDonationRequests from "../../Dasboard/MyDonationRequests/MyDonationRequests";
+import ContentManagement from "../../Dasboard/ContentManagement/ContentManagement";
+import AddBlog from "../../Dasboard/ContentManagement/AddBlog/AddBlog";
+import SearchPage from "../Pages/SearchPage/SearchPage";
   const router = createBrowserRouter([
     {
       path: "/",
@@ -34,8 +43,16 @@ import CreateDonationRequest from "../../Dasboard/CreateDonationRequest/CreateDo
           element: <DonationRequests/>
         },
         {
-          path: 'blog',
+          path: '/donation-details/:id',
+          element: <PrivateRoute> <DonationRequestDetails/></PrivateRoute>
+        },
+        {
+          path: '/blog',
           element: <PublishedBlogs/>
+        },
+        {
+          path: '/search',
+          element: <SearchPage/>
         }
       ]
     },
@@ -48,12 +65,40 @@ import CreateDonationRequest from "../../Dasboard/CreateDonationRequest/CreateDo
           element: <AdminProfile/>
         },
         {
+          path: 'volunteer-profile',
+          element: <AdminProfile></AdminProfile>
+        },
+        {
           path: 'allUsers',
           element: <AllUsers/>
         },
         {
           path: 'create-donation-request',
-          element: <CreateDonationRequest/>
+          element: <PrivateRoute><CreateDonationRequest/></PrivateRoute>
+        },
+        {
+          path: 'all-blood-donation',
+          element: <AllBloodDonationRequests/>
+        },
+        {
+          path: 'donor-dashboard',
+          element: <DonorDashboard/>
+        },
+        {
+          path: 'edit-create-request/:id',
+          element:<EditDonationRequest/>
+        },
+        {
+          path: 'my-donation',
+          element: <MyDonationRequests/>
+        },
+        {
+          path: 'content-management-page',
+          element: <ContentManagement/>
+        },
+        {
+          path: 'content-management/add-blog',
+          element: <AddBlog/>
         }
       ]
     }

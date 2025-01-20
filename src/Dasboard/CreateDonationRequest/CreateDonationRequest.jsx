@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"; // Import useForm from React Hook For
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa"; // React Icons for success/error icons
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/axiosSecure";
+import Swal from "sweetalert2";
 
 const CreateDonationRequest = () => {
     const axiosSecure = useAxiosSecure();
@@ -11,6 +12,7 @@ const CreateDonationRequest = () => {
   console.log(user);
   const navigate = useNavigate();
   const [districtData, setDistrictData] = useState([]);
+
   const [upazilaData, setUpazilaData] = useState([]);
   const [filteredUpazilas, setFilteredUpazilas] = useState([]);
   const [selectedDistrictId, setSelectedDistrictId] = useState("");
@@ -19,13 +21,15 @@ const CreateDonationRequest = () => {
     fetch("/districts.json")
       .then((res) => res.json())
       .then((data) => {
-        console.log("District Data:", data);
+        // console.log("District Data:", data);
         const districts = data[2]?.data || [];
         setDistrictData(districts);
+        // console.log(districts);
       })
       .catch((err) => console.error("Error loading districts:", err));
+      
   }, []);
-  
+  // console.log(districtData);
   useEffect(() => {
     fetch("/upazilas.json")
       .then((res) => res.json())
@@ -52,21 +56,22 @@ const CreateDonationRequest = () => {
   // React Hook Form
   const {
     register,
-    handleSubmit,
+    handleSubmit,reset,
     formState: { errors },
   } = useForm();
 
   // Handle Form Submission
   const onSubmit = (data) => {
-    console.log(data); 
-
+    const districtsName = districtData.find(item => item.id == data.recipientDistrict)
+    console.log( "districts", districtsName); 
+ 
     const userInfo = {
         bloodGroup: data.bloodGroup,
         donationDate: data.donationDate,
-        donationTime: parseFloat(data.donationTime),
+        donationTime: data.donationTime,
         fullAddress: data.fullAddress,
         hospitalName: data.hospitalName,
-        recipientDistrict: data.recipientDistrict,
+        recipientDistrict: districtsName.name,
         recipientName: data.recipientName,
         recipientUpazila: data.recipientUpazila,
         requestMessage: data.requestMessage,
@@ -74,29 +79,28 @@ const CreateDonationRequest = () => {
         requesterName: data.requesterName,
         status: 'pending',
       }
+      console.log(userInfo);
 
       axiosSecure.post('/create-donation-request', userInfo)
   .then((userRes) => {
-    if (userRes.data.insertedId) {
-      // Reset the form
-      reset();
-      // Show a success message
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: `${userInfo.name} Donation Request added`,
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
+   
   })
   .catch((error) => {
     console.error("Error creating donation request:", error);
   });
 
+  reset();
     // Show a success message and redirect to the dashboard
-    alert("Donation request created successfully!");
-    // navigate("/dashboard");
+    Swal.fire({
+      title: "Success!",
+      text: "Your donation request has been created successfully.",
+      icon: "success",
+      confirmButtonText: "OK",
+    })
+    .then(() => {
+      // Redirect to the dashboard after closing the alert
+      navigate("/dashboard");
+    });
   };
 
   // If user is blocked, show a message

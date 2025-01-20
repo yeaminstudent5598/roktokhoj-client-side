@@ -1,112 +1,166 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import useAuth from "../../../Hooks/useAuth"; // Custom hook to get current user
-import useAxiosPublic from "../../../Hooks/useAxiosPublic"; // Custom hook for axios
-import Modal from "../../UI/Modal"; // Assuming you have a Modal component
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import useAuth from "../../../../Hooks/useAuth";
+import useAxiosPublic from "../../../../Hooks/useAxiosPublic";
+import useAxiosSecure from "../../../../Hooks/axiosSecure";
 
 const DonationRequestDetails = () => {
-  const { currentUser } = useAuth(); // Get current user
-  const { id } = useParams(); // Get donation request ID from URL params
-  const axiosPublic = useAxiosPublic();
-  const navigate = useNavigate();
-  
+  const {user} = useAuth();
+  const axiosPublic =useAxiosPublic();
+  const axiosSecure =useAxiosSecure();
+
+  const { id } = useParams();
   const [donationRequest, setDonationRequest] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [donorName] = useState(currentUser?.name); // Donor name from logged-in user
-  const [donorEmail] = useState(currentUser?.email); // Donor email from logged-in user
+  const [error, setError] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    // Fetch donation request details by ID
-    const fetchDonationRequest = async () => {
-      try {
-        const response = await axiosPublic.get(`/create-donation-request/${id}`);
-        setDonationRequest(response.data);
-      } catch (error) {
-        console.error("Error fetching donation request details:", error);
-      }
-    };
 
-    fetchDonationRequest();
-  }, [id, axiosPublic]);
-
-  // Handle donation confirmation
-  const handleDonate = async () => {
-    if (!currentUser) {
-      // Redirect to login if the user is not logged in
-      navigate("/login");
-      return;
-    }
-
+  // Fetch donation request details
+  const fetchDonationRequest = async () => {
     try {
-      // Update the donation status to 'inprogress'
-      const updatedRequest = { ...donationRequest, status: "inprogress" };
-      await axiosPublic.put(`/create-donation-request/${id}`, updatedRequest);
-      setShowModal(false); // Close the modal
-      alert("Donation confirmed and status updated!");
+      const response = await axiosSecure.get(
+        `/create-donation-request/${id}`
+      );
+      setDonationRequest(response.data);
     } catch (error) {
-      console.error("Error confirming donation:", error);
+      if (error.response?.status === 404) {
+        console.error("Donation request not found.");
+        setError("Donation request not found. Please check the ID.");
+      } else {
+        console.error("Error fetching donation request details:", error);
+        setError("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
+  useEffect(() => {
+    fetchDonationRequest();
+  }, [id]);
+
+  // Handle donation confirmation
+  const handleConfirmDonation = async () => {
+    try {
+      // Simulate API request to update donation status
+      await axiosPublic.patch(`/donation-details/${id}`, {
+        status: "inprogress",
+        donorName: user.displayName,
+        donorEmail: user.email,
+      });
+
+      setModalVisible(false); // Close modal on success
+      Swal.fire({
+        title: "Donation Confirmed!",
+        text: "Thank you for your generous donation. The request status has been updated to 'In Progress.'",
+        icon: "success",
+        confirmButtonText: "Close",
+      });
+    } catch (error) {
+      console.error("Error confirming donation:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to confirm donation. Please try again later.",
+        icon: "error",
+        confirmButtonText: "Close",
+      });
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="text-center py-10">
+        <h2 className="text-2xl font-bold text-red-500">Error</h2>
+        <p className="text-gray-600">{error}</p>
+      </div>
+    );
+  }
+
+  if (!donationRequest) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+
   return (
-    <div className="container mx-auto p-6">
-      {donationRequest && (
-        <>
-          <h1 className="text-center text-2xl font-bold mb-4">Donation Request Details</h1>
-          
-          <div className="card border p-6 shadow-md bg-white rounded-lg mb-6">
-            <h2 className="font-semibold">Recipient: {donationRequest.recipientName}</h2>
-            <p className="text-sm text-gray-600">Location: {donationRequest.fullAddress}</p>
-            <p className="text-sm text-gray-600">Blood Group: {donationRequest.bloodGroup}</p>
-            <p className="text-sm text-gray-600">Date: {new Date(donationRequest.donationDate).toLocaleDateString()}</p>
-            <p className="text-sm text-gray-600">Time: {new Date(donationRequest.donationTime * 1000).toLocaleTimeString()}</p>
-            <p className="text-sm text-gray-600">Request Message: {donationRequest.requestMessage}</p>
-            <p className="text-sm text-gray-600">Hospital: {donationRequest.hospitalName}</p>
-            <p className="text-sm text-gray-600">District: {donationRequest.recipientDistrict}</p>
-            <p className="text-sm text-gray-600">Upazila: {donationRequest.recipientUpazila}</p>
-          </div>
+    <div className="max-w-3xl mx-auto p-5 pt-20">
+      {/* Details Section */}
+      <div className="card bg-base-100 shadow-xl p-6">
+        <h1 className="text-3xl font-bold text-center mb-5 text-primary">
+          Donation Request Details
+        </h1>
+        <div className="text-lg">
+          <p>
+            <span className="font-semibold">Name:</span> {donationRequest.recipientName}
+          </p>
+          <p>
+            <span className="font-semibold">Blood Group:</span>{" "}
+            {donationRequest.bloodGroup}
+          </p>
+          <p>
+            <span className="font-semibold">Location:</span> {donationRequest.recipientUpazila}, 
+             {donationRequest.fullAddress} , {donationRequest.hospitalName}
+          </p>
+          <p>
+            <span className="font-semibold">Contact:</span>{" "}
+            {donationRequest.requesterEmail}
+          </p>
+        </div>
+        <button
+          className="btn btn-primary mt-6 w-full"
+          onClick={() => setModalVisible(true)}
+        >
+          Donate
+        </button>
+      </div>
 
-          {/* Donate button */}
-          <button
-            onClick={() => setShowModal(true)}
-            className="btn btn-primary mt-4"
-          >
-            Donate
-          </button>
-
-          {/* Modal with donation form */}
-          {showModal && (
-            <Modal onClose={() => setShowModal(false)}>
-              <h3 className="text-xl font-bold mb-4">Confirm Donation</h3>
-              <form onSubmit={(e) => e.preventDefault()}>
-                <div className="mb-4">
-                  <label htmlFor="donorName" className="block text-sm text-gray-600">Donor Name</label>
-                  <input
-                    id="donorName"
-                    value={donorName}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded mt-2"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="donorEmail" className="block text-sm text-gray-600">Donor Email</label>
-                  <input
-                    id="donorEmail"
-                    value={donorEmail}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded mt-2"
-                  />
-                </div>
+      {/* Modal */}
+      {modalVisible && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h2 className="font-bold text-lg text-primary mb-4">
+              Confirm Donation
+            </h2>
+            <form>
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text">Donor Name</span>
+                </label>
+                <input
+                  type="text"
+                  value={user.displayName}
+                  readOnly
+                  className="input input-bordered"
+                />
+              </div>
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text">Donor Email</span>
+                </label>
+                <input
+                  type="email"
+                  value={user.email}
+                  readOnly
+                  className="input input-bordered"
+                />
+              </div>
+              <div className="flex justify-end">
                 <button
-                  onClick={handleDonate}
-                  className="btn btn-primary mt-4"
+                  type="button"
+                  className="btn btn-primary mr-2"
+                  onClick={handleConfirmDonation}
                 >
                   Confirm Donation
                 </button>
-              </form>
-            </Modal>
-          )}
-        </>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setModalVisible(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
