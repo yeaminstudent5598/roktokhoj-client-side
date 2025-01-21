@@ -1,281 +1,259 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form"; // Import useForm from React Hook Form
-import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa"; // React Icons for success/error icons
+import { useForm } from "react-hook-form";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
 
 const CreateDonationRequest = () => {
-    const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
-  console.log(user);
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [districtData, setDistrictData] = useState([]);
-
   const [upazilaData, setUpazilaData] = useState([]);
   const [filteredUpazilas, setFilteredUpazilas] = useState([]);
   const [selectedDistrictId, setSelectedDistrictId] = useState("");
 
+  // Fetch districts
   useEffect(() => {
     fetch("/districts.json")
       .then((res) => res.json())
-      .then((data) => {
-        // console.log("District Data:", data);
-        const districts = data[2]?.data || [];
-        setDistrictData(districts);
-        // console.log(districts);
-      })
+      .then((data) => setDistrictData(data[2]?.data || []))
       .catch((err) => console.error("Error loading districts:", err));
-      
   }, []);
-  // console.log(districtData);
+
+  // Fetch upazilas
   useEffect(() => {
     fetch("/upazilas.json")
       .then((res) => res.json())
-      .then((data) => {
-        console.log("Upazila Data:", data);
-        const upazilas = data[2]?.data || [];
-        setUpazilaData(upazilas);
-      })
+      .then((data) => setUpazilaData(data[2]?.data || []))
       .catch((err) => console.error("Error loading upazilas:", err));
   }, []);
-  
-  // Filter Upazilas based on District Selection
+
+  // Filter upazilas when district changes
   useEffect(() => {
     if (selectedDistrictId) {
-      const filtered = upazilaData.filter(
-        (upazila) => upazila.district_id === selectedDistrictId
+      setFilteredUpazilas(
+        upazilaData.filter((upazila) => upazila.district_id === selectedDistrictId)
       );
-      setFilteredUpazilas(filtered);
     } else {
       setFilteredUpazilas([]);
     }
   }, [selectedDistrictId, upazilaData]);
 
-  // React Hook Form
   const {
     register,
-    handleSubmit,reset,
+    handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  // Handle Form Submission
-  const onSubmit = (data) => {
-    const districtsName = districtData.find(item => item.id == data.recipientDistrict)
-    console.log( "districts", districtsName);
- 
-    const userInfo = {
-        bloodGroup: data.bloodGroup,
-        donationDate: data.donationDate,
-        donationTime: data.donationTime,
-        fullAddress: data.fullAddress,
-        hospitalName: data.hospitalName,
-        recipientDistrict: districtsName.name,
-        recipientName: data.recipientName,
-        recipientUpazila: data.recipientUpazila,
-        requestMessage: data.requestMessage,
-        requesterEmail: data.requesterEmail,
-        requesterName: data.requesterName,
-        status: 'pending',
-      }
-      console.log(userInfo);
-
-      axiosSecure.post('/create-donation-request', userInfo)
-  .then((userRes) => {
-   
-  })
-  .catch((error) => {
-    console.error("Error creating donation request:", error);
+  const { data: users = [], isLoading: isUsersLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const response = await axiosSecure.get("/users");
+      return response.data;
+    },
   });
 
-  reset();
-    // Show a success message and redirect to the dashboard
-    Swal.fire({
-      title: "Success!",
-      text: "Your donation request has been created successfully.",
-      icon: "success",
-      confirmButtonText: "OK",
-    })
-    .then(() => {
-      // Redirect to the dashboard after closing the alert
-      navigate("/dashboard");
-    });
-  };
- console.log( "block user", user)
-  // If user is blocked, show a message
-  if (user?.status === "blocked") {
+  const loggedInUser = users.find((u) => u.email === user?.email);
+
+  if (loggedInUser?.status === "blocked") {
     return (
-      <div className="p-6 bg-red-100 text-red-700 rounded-lg">
-        <FaExclamationCircle className="inline-block mr-2" />
-        <span>You are blocked. You cannot create donation requests.</span>
+      <div className="flex items-center justify-center h-screen">
+        <div className="p-6 bg-red-100 text-red-700 rounded-lg shadow-lg text-center">
+          <FaExclamationCircle className="text-4xl mb-4" />
+          <h2 className="text-xl font-bold mb-2">Access Denied</h2>
+          <p>You are blocked and cannot create donation requests.</p>
+        </div>
       </div>
     );
   }
 
+  const onSubmit = (data) => {
+    const selectedDistrict = districtData.find(
+      (district) => district.id === data.recipientDistrict
+    );
+
+    const userInfo = {
+      bloodGroup: data.bloodGroup,
+      donationDate: data.donationDate,
+      donationTime: data.donationTime,
+      fullAddress: data.fullAddress,
+      hospitalName: data.hospitalName,
+      recipientDistrict: selectedDistrict?.name || "",
+      recipientName: data.recipientName,
+      recipientUpazila: data.recipientUpazila,
+      requestMessage: data.requestMessage,
+      requesterEmail: user?.email,
+      requesterName: user?.displayName,
+      status: "pending",
+    };
+
+    axiosSecure
+      .post("/create-donation-request", userInfo)
+      .then(() => {
+        Swal.fire({
+          title: "Success!",
+          text: "Your donation request has been created successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate("/dashboard/donor-dashboard");
+        });
+      })
+      .catch((error) => {
+        console.error("Error creating donation request:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to create donation request. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
+
+    reset();
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-semibold mb-4">Create Donation Request</h2>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-3xl font-bold text-center mb-6">
+        Create Donation Request
+      </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Requester Information */}
-        <div className="form-control">
-          <label className="label">Requester Name</label>
-          <input
-            type="text"
-            value={user?.displayName}
-            readOnly
-            {...register("requesterName")}
-            className="input input-bordered w-full"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Requester Name</label>
+            <input
+              type="text"
+              value={user?.displayName}
+              readOnly
+              {...register("requesterName")}
+              className="input input-bordered w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Requester Email</label>
+            <input
+              type="email"
+              value={user?.email}
+              readOnly
+              {...register("requesterEmail")}
+              className="input input-bordered w-full"
+            />
+          </div>
         </div>
 
-        <div className="form-control">
-          <label className="label">Requester Email</label>
-          <input
-            type="email"
-            value={user?.email}
-            readOnly
-            {...register("requesterEmail")}
-            className="input input-bordered w-full"
-          />
-        </div>
-
-        {/* Recipient Information */}
-        <div className="form-control">
-          <label className="label">Recipient Name</label>
+        <div>
+          <label className="block text-sm font-medium">Recipient Name</label>
           <input
             type="text"
             {...register("recipientName", { required: "Recipient Name is required" })}
             className="input input-bordered w-full"
           />
           {errors.recipientName && (
-            <span className="text-red-500">{errors.recipientName.message}</span>
+            <span className="text-red-500 text-sm">{errors.recipientName.message}</span>
           )}
         </div>
 
-        <div className="form-control">
-          <label className="label">Recipient District</label>
-          <select
-            {...register("recipientDistrict", { required: "District is required" })}
-            className="select select-bordered w-full"
-            value={selectedDistrictId}
-            onChange={(e) => setSelectedDistrictId(e.target.value)}
-          >
-            <option value="">Select District</option>
-            {districtData.map((district) => (
-              <option key={district.id} value={district.id}>
-                {district.name}
-              </option>
-            ))}
-          </select>
-          {errors.recipientDistrict && (
-            <span className="text-red-500">{errors.recipientDistrict.message}</span>
-          )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Recipient District</label>
+            <select
+              {...register("recipientDistrict", { required: "District is required" })}
+              className="select select-bordered w-full"
+              value={selectedDistrictId}
+              onChange={(e) => setSelectedDistrictId(e.target.value)}
+            >
+              <option value="">Select District</option>
+              {districtData.map((district) => (
+                <option key={district.id} value={district.id}>
+                  {district.name}
+                </option>
+              ))}
+            </select>
+            {errors.recipientDistrict && (
+              <span className="text-red-500 text-sm">{errors.recipientDistrict.message}</span>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Recipient Upazila</label>
+            <select
+              {...register("recipientUpazila", { required: "Upazila is required" })}
+              className="select select-bordered w-full"
+            >
+              <option value="">Select Upazila</option>
+              {filteredUpazilas.map((upazila) => (
+                <option key={upazila.id} value={upazila.name}>
+                  {upazila.name}
+                </option>
+              ))}
+            </select>
+            {errors.recipientUpazila && (
+              <span className="text-red-500 text-sm">{errors.recipientUpazila.message}</span>
+            )}
+          </div>
         </div>
 
-        <div className="form-control">
-          <label className="label">Recipient Upazila</label>
-          <select
-            {...register("recipientUpazila", { required: "Upazila is required" })}
-            className="select select-bordered w-full"
-          >
-            <option value="">Select Upazila</option>
-            {filteredUpazilas.map((upazila) => (
-              <option key={upazila.id} value={upazila.name}>
-                {upazila.name}
-              </option>
-            ))}
-          </select>
-          {errors.recipientUpazila && (
-            <span className="text-red-500">{errors.recipientUpazila.message}</span>
-          )}
-        </div>
-
-        {/* Hospital & Blood Group */}
-        <div className="form-control">
-          <label className="label">Hospital Name</label>
+        <div>
+          <label className="block text-sm font-medium">Hospital Name</label>
           <input
             type="text"
             {...register("hospitalName", { required: "Hospital Name is required" })}
             className="input input-bordered w-full"
           />
           {errors.hospitalName && (
-            <span className="text-red-500">{errors.hospitalName.message}</span>
+            <span className="text-red-500 text-sm">{errors.hospitalName.message}</span>
           )}
         </div>
 
-        <div className="form-control">
-          <label className="label">Full Address</label>
-          <input
-            type="text"
-            {...register("fullAddress", { required: "Full Address is required" })}
-            className="input input-bordered w-full"
-          />
-          {errors.fullAddress && (
-            <span className="text-red-500">{errors.fullAddress.message}</span>
-          )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium">Blood Group</label>
+            <select
+              {...register("bloodGroup", { required: "Blood Group is required" })}
+              className="select select-bordered w-full"
+            >
+              <option value="">Select Blood Group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+            {errors.bloodGroup && (
+              <span className="text-red-500 text-sm">{errors.bloodGroup.message}</span>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Donation Date</label>
+            <input
+              type="date"
+              {...register("donationDate", { required: "Donation Date is required" })}
+              className="input input-bordered w-full"
+            />
+            {errors.donationDate && (
+              <span className="text-red-500 text-sm">{errors.donationDate.message}</span>
+            )}
+          </div>
         </div>
 
-        <div className="form-control">
-          <label className="label">Blood Group</label>
-          <select
-            {...register("bloodGroup", { required: "Blood Group is required" })}
-            className="select select-bordered w-full"
-          >
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-          </select>
-          {errors.bloodGroup && (
-            <span className="text-red-500">{errors.bloodGroup.message}</span>
-          )}
-        </div>
-
-        {/* Donation Date & Time */}
-        <div className="form-control">
-          <label className="label">Donation Date</label>
-          <input
-            type="date"
-            {...register("donationDate", { required: "Donation Date is required" })}
-            className="input input-bordered w-full"
-          />
-          {errors.donationDate && (
-            <span className="text-red-500">{errors.donationDate.message}</span>
-          )}
-        </div>
-
-        <div className="form-control">
-          <label className="label">Donation Time</label>
-          <input
-            type="time"
-            {...register("donationTime", { required: "Donation Time is required" })}
-            className="input input-bordered w-full"
-          />
-          {errors.donationTime && (
-            <span className="text-red-500">{errors.donationTime.message}</span>
-          )}
-        </div>
-
-        {/* Request Message */}
-        <div className="form-control">
-          <label className="label">Request Message</label>
+        <div>
+          <label className="block text-sm font-medium">Message</label>
           <textarea
-            {...register("requestMessage", { required: "Request Message is required" })}
+            {...register("requestMessage")}
             className="textarea textarea-bordered w-full"
-          />
-          {errors.requestMessage && (
-            <span className="text-red-500">{errors.requestMessage.message}</span>
-          )}
+            placeholder="Write your request message here..."
+          ></textarea>
         </div>
 
-        {/* Request Button */}
         <button type="submit" className="btn btn-primary w-full">
-          <FaCheckCircle className="mr-2" /> Submit Donation Request
+          Submit Request
         </button>
       </form>
     </div>

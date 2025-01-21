@@ -165,7 +165,7 @@ const DonorDashboard = () => {
       {donationRequests.length > 0 && (
         <button
           className="btn btn-secondary mt-4"
-          onClick={() => navigate("/my-donation-requests")}
+          onClick={() => navigate("/dashboard/my-donation")}
         >
           View My All Requests
         </button>
