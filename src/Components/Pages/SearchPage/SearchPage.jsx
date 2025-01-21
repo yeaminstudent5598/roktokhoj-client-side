@@ -5,89 +5,66 @@ import useAxiosSecure from "../../../Hooks/axiosSecure";
 const SearchPage = () => {
   const axiosSecure = useAxiosSecure();
   const [searchCriteria, setSearchCriteria] = useState({
-    bloodGroup: "",            
+    bloodGroup: "",
     district: "",
     upazila: "",
   });
-  const { data: users = [] } = useQuery({
-    queryKey: ["users",searchCriteria.bloodGroup, searchCriteria.district, searchCriteria.upazila],
+ 
+ 
+
+  // Fetch district data
+  const { data: districtData = [], isLoading: isDistrictLoading } = useQuery({
+    queryKey: ["districts"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users");
-      console.log("Fetched users data:", res.data);
-      console.log(res.data);
-      return res.data;
+      const response = await fetch("/districts.json");
+      const data = await response.json();
+      return data[2]?.data || [];
+    },
+  });
+  const districtName = (id) =>{
+    const districsname = districtData.find(item => item.id == id)
+    
+    return districsname?.name
+  }
+  // Fetch upazila data
+  const { data: upazilaData = [], isLoading: isUpazilaLoading } = useQuery({
+    queryKey: ["upazilas"],
+    queryFn: async () => {
+      const response = await fetch("/upazilas.json");
+      const data = await response.json();
+      return data[2]?.data || [];
     },
   });
 
-  
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [districtData, setDistrictData] = useState([]);
-  const [upazilaData, setUpazilaData] = useState([]);
-  const [filteredUpazilas, setFilteredUpazilas] = useState([]);
-
-  // Fetch district and upazila data
-  useEffect(() => {
-    fetch("/districts.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const districts = data[2]?.data || [];
-        setDistrictData(districts);
-      })
-      .catch((err) => console.error("Error loading districts:", err));
-  }, []);
-
-  useEffect(() => {
-    fetch("/upazilas.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const upazilas = data[2]?.data || [];
-        setUpazilaData(upazilas);
-      })
-      .catch((err) => console.error("Error loading upazilas:", err));
-  }, []);
-
-   
   // Filter upazilas based on selected district
-  useEffect(() => {
-    if (searchCriteria.district) {
-      const filtered = upazilaData.filter(
-        (upazila) => upazila.district_id === searchCriteria.district
-      );
-      setFilteredUpazilas(filtered);
-    } else {
-      setFilteredUpazilas([]);
-    }
-  }, [searchCriteria.district, upazilaData]);
-
-  // Filter users whenever search criteria or users data change
-  useEffect(() => {
-    if (users.length > 0) {
-      const filtered = users.filter((user) => {
-        return (
-          (searchCriteria.bloodGroup ? user.bloodGroup === searchCriteria.bloodGroup : true) &&
-          (searchCriteria.district ? user.district === searchCriteria.district : true) &&
-          (searchCriteria.upazila ? user.upazila === searchCriteria.upazila : true)
-        );
-      });
-      setFilteredUsers(filtered);
-    }
-  }, [users, searchCriteria]); // Re-run when `users` or `searchCriteria` change
+  const filteredUpazilas = upazilaData.filter(
+    (upazila) => upazila.district_id === searchCriteria.district
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSearchCriteria((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearch = () => {
-    const filtered = users.filter((user) => {
-      return (
-        (searchCriteria.bloodGroup ? user.bloodGroup === searchCriteria.bloodGroup : true) &&
-        (searchCriteria.district ? user.district === districtData.find(d => d.id === searchCriteria.district)?.name : true) &&
-        (searchCriteria.upazila ? user.upazila === searchCriteria.upazila : true)
-      );
-    });
-    setFilteredUsers(filtered);
-  };
+   // Fetch users data based on search criteria
+   const { data: users = [], isLoading: isUsersLoading } = useQuery({
+    queryKey: [
+      "users",
+      searchCriteria.bloodGroup,
+      districtName(searchCriteria.district),
+      searchCriteria.upazila,
+    ],
+    queryFn: async () => {
+      const response = await axiosSecure.get("/users", {
+        params: {...searchCriteria, district: districtName(searchCriteria.district)},
+      });
+      return response.data;
+    },
+  });
+
+  if (isUsersLoading || isDistrictLoading || isUpazilaLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6">
@@ -159,19 +136,12 @@ const SearchPage = () => {
             </select>
           </div>
         </div>
-
-        <button
-          onClick={handleSearch}
-          className="btn btn-primary mt-4 w-full"
-        >
-          Search
-        </button>
       </div>
 
       {/* Donor Results */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredUsers.length ? (
-          filteredUsers.map((user, index) => (
+        {users.length ? (
+          users.map((user, index) => (
             <div
               key={index}
               className="bg-white rounded-lg shadow-md p-4 flex flex-col gap-2"
@@ -182,7 +152,9 @@ const SearchPage = () => {
                   {user.bloodGroup}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm">{user.upazila}, {user.district}</p>
+              <p className="text-gray-600 text-sm">
+                {user.upazila}, {user.district}
+              </p>
               <p className="text-gray-600 text-sm">Contact: {user.email}</p>
             </div>
           ))

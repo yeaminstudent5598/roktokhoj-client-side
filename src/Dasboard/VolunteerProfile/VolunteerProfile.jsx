@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 import useAuth from "../../Hooks/useAuth";
 
-const AdminProfile = () => {
+const VolunteerProfile = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -76,7 +76,7 @@ const AdminProfile = () => {
   </div>
   
   <div>
-    <h2 className="text-3xl font-bold text-center text-gray-800">Admin Profile</h2>
+    <h2 className="text-3xl my-3 font-bold text-center text-gray-800">Volunteer Profile</h2>
     <div>
     <p className="text-xl text-center font-medium text-gray-700">Email: {profile?.email}</p>
     </div>
@@ -124,16 +124,26 @@ const AdminProfile = () => {
         </div>
 
         <div className="form-control">
-          <label className="label font-semibold">Blood Group</label>
-          <input
-            type="text"
-            name="bloodGroup"
-            value={isEditing ? updatedProfile?.bloodGroup : profile?.bloodGroup}
-            onChange={handleInputChange}
-            className={`input input-bordered w-full ${isEditing ? "" : "bg-gray-200 cursor-not-allowed"}`}
-            disabled={!isEditing}
-          />
-        </div>
+  <label className="label font-semibold">Blood Group</label>
+  <select
+    name="bloodGroup"
+    value={isEditing ? updatedProfile?.bloodGroup : profile?.bloodGroup}
+    onChange={handleInputChange}
+    className={`select select-bordered w-full ${isEditing ? "" : "bg-gray-200 cursor-not-allowed"}`}
+    disabled={!isEditing}
+  >
+    <option value="">Select Blood Group</option>
+    <option value="A+">A+</option>
+    <option value="A-">A-</option>
+    <option value="B+">B+</option>
+    <option value="B-">B-</option>
+    <option value="AB+">AB+</option>
+    <option value="AB-">AB-</option>
+    <option value="O+">O+</option>
+    <option value="O-">O-</option>
+  </select>
+</div>
+
       </form>
 
       <div className="flex justify-center mt-6">
@@ -163,4 +173,4 @@ const AdminProfile = () => {
   );
 };
 
-export default AdminProfile;
+export default VolunteerProfile;

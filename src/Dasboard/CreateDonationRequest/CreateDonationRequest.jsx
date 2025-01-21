@@ -63,7 +63,7 @@ const CreateDonationRequest = () => {
   // Handle Form Submission
   const onSubmit = (data) => {
     const districtsName = districtData.find(item => item.id == data.recipientDistrict)
-    console.log( "districts", districtsName); 
+    console.log( "districts", districtsName);
  
     const userInfo = {
         bloodGroup: data.bloodGroup,
@@ -102,7 +102,7 @@ const CreateDonationRequest = () => {
       navigate("/dashboard");
     });
   };
-
+ console.log( "block user", user)
   // If user is blocked, show a message
   if (user?.status === "blocked") {
     return (

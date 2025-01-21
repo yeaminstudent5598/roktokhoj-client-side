@@ -5,6 +5,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../Hooks/useAdmin";
 import useValunteer from "../Hooks/useVolunteer";
 import useAuth from "../Hooks/useAuth";
+import { FaPersonRifle } from "react-icons/fa6";
 
 const Dashboard = () => {
     const {user} = useAuth();
@@ -20,13 +21,13 @@ const Dashboard = () => {
         <div className="p-4 border-b">
           <div className="flex items-center gap-4">
             <img
-              src={user.photoURL}
+              src={user?.photoURL}
               alt="Profile"
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <h2 className="font-bold text-lg">{user.displayName}</h2>
-              <p className="text-sm text-gray-500">{user.email}</p>
+              <h2 className="font-bold text-lg">{user?.displayName}</h2>
+              <p className="text-sm text-gray-500">{user?.email}</p>
             </div>
           </div>
         </div>
@@ -50,6 +51,14 @@ const Dashboard = () => {
                   className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
                 >
                   <FaHome /> Admin Profile
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/admin-dashboard"
+                  className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
+                >
+                  <FaHome /> Admin Dashboard
                 </NavLink>
               </li>
               <li>
@@ -82,10 +91,18 @@ const Dashboard = () => {
             <>
               <li>
                 <NavLink
+                  to="/dashboard/volunteer-dashboard"
+                  className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
+                >
+                  <FaHome /> Volunteer Dashboard
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
                   to="/dashboard/volunteer-profile"
                   className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
                 >
-                  <FaHome /> Volunteer Profile
+                  <FaPersonRifle /> Volunteer Profile
                 </NavLink>
               </li>
               <li>
@@ -98,10 +115,10 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/dashboard/create-donation-request"
+                  to="/dashboard/content-management-page"
                   className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
                 >
-                  <MdOutlineRequestPage /> Create Donation Request Page
+                  <MdOutlineRequestPage /> Content Management Page
                 </NavLink>
               </li>
             </>
@@ -110,10 +127,18 @@ const Dashboard = () => {
             <>
               <li>
                 <NavLink
-                  to="/dashboard/donor-dashboard"
+                  to="/dashboard/donor-profile"
                   className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
                 >
                   <FaHome /> Donor Profile
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard/donor-dashboard"
+                  className="flex items-center gap-2 text-gray-700 hover:text-orange-500"
+                >
+                  <FaHome /> Donor Dasboard
                 </NavLink>
               </li>
               <li>

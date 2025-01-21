@@ -1,38 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../Hooks/useAuth"; // Custom hook to get the current user
 import useAxiosPublic from "../../../Hooks/useAxiosPublic"; // Custom hook to use AxiosPublic
+import { useQuery } from "@tanstack/react-query"; // Import useQuery from TanStack Query
 
 const DonationRequests = () => {
-  const { user, currentUser } = useAuth();
+  const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
-  const [requests, setRequests] = useState([]); 
 
-  useEffect(() => {
-    // Fetch pending blood donation requests from API
-    const fetchRequests = async () => {
-      try {
-        const response = await axiosPublic.get("/create-donation-request"); // API request to get donation data
-        const pendingRequests = response.data.filter(request => request.status === "pending"); // Filter for pending requests
-        setRequests(pendingRequests); // Update the state with pending requests only
-      } catch (error) {
-        console.error("Error fetching donation requests:", error);
-      }
-    };
+  // Function to fetch pending donation requests
+  const fetchPendingRequests = async () => {
+    const response = await axiosPublic.get("/create-donation-request");
+    return response.data.filter(request => request.status === "pending");
+  };
 
-    fetchRequests(); // Fetch donation requests when the component mounts
-  }, [axiosPublic]); // The dependency array ensures the effect runs only once after the initial render
+  // Using TanStack Query's useQuery hook for pending requests (updated for v5)
+  const { data: requests, error, isLoading } = useQuery({
+    queryKey: ["pendingDonationRequests"], // Query Key
+    queryFn: fetchPendingRequests, // Query Function (GET method)
+  });
 
   const handleViewRequest = (id) => {
     if (!user) {
-      // If user is not logged in, redirect to the login page
-      navigate("/login");
+      navigate("/login"); // If not logged in, redirect to login
     } else {
-      // Navigate to the donation request details page
-      navigate(`/donation-details/${id}`);
+      navigate(`/donation-details/${id}`); // Navigate to donation request details page
     }
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching requests</p>;
 
   return (
     <div className="container pt-20 mx-auto p-6">
@@ -51,7 +49,7 @@ const DonationRequests = () => {
 
       {/* Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {requests.map((request) => (
+        {requests?.map((request) => (
           <div
             key={request._id} // Using _id as the key for each request
             className="card border p-4 shadow-md bg-white rounded-lg"

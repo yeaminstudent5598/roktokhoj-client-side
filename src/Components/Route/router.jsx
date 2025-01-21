@@ -10,7 +10,6 @@ import DonationRequests from "../Pages/DonationRequests/DonationRequests";
 import PublishedBlogs from "../Pages/PublishedBlogs/PublishedBlogs";
 import Dashboard from "../../Dasboard/Dashboard";
 import AllUsers from "../../Dasboard/AllUsers/AllUsers";
-import AdminProfile from "../../Dasboard/AdminProfile/AdminProfile";
 import CreateDonationRequest from "../../Dasboard/CreateDonationRequest/CreateDonationRequest";
 import DonationRequestDetails from "../Pages/DonationRequests/DonationRequestDetails/DonationRequestDetails";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
@@ -21,10 +20,17 @@ import MyDonationRequests from "../../Dasboard/MyDonationRequests/MyDonationRequ
 import ContentManagement from "../../Dasboard/ContentManagement/ContentManagement";
 import AddBlog from "../../Dasboard/ContentManagement/AddBlog/AddBlog";
 import SearchPage from "../Pages/SearchPage/SearchPage";
+import DonorProfile from "../../Dasboard/DonorDashboard/DonorProfile/DonorProfile";
+import AdminDashboard from "../../Dasboard/AdminDashboard/AdminDashboard";
+import AdminProfile from "../../Dasboard/AdminProfile/AdminProfile";
+import VolunteerProfile from "../../Dasboard/VolunteerProfile/VolunteerProfile";
+import BlogDetails from "../Pages/PublishedBlogs/BlogDetails/BlogDetails";
+import ErrorPage from "../../ErrorPage/ErrorPage";
   const router = createBrowserRouter([
     {
       path: "/",
       element: <MainLayOut/>,
+      errorElement: <ErrorPage/>,
       children:[
         {
             path: '/',
@@ -51,6 +57,10 @@ import SearchPage from "../Pages/SearchPage/SearchPage";
           element: <PublishedBlogs/>
         },
         {
+          path: "blogs/:id",
+          element: <BlogDetails/>
+        },
+        {
           path: '/search',
           element: <SearchPage/>
         }
@@ -61,12 +71,20 @@ import SearchPage from "../Pages/SearchPage/SearchPage";
       element: <Dashboard/>,
       children: [
         {
+          path: 'admin-dashboard',
+          element: <AdminDashboard/>
+        },
+        {
           path: 'admin-profile',
           element: <AdminProfile/>
         },
         {
+          path: 'volunteer-dashboard',
+          element: <AdminDashboard/>
+        },
+        {
           path: 'volunteer-profile',
-          element: <AdminProfile></AdminProfile>
+          element: <VolunteerProfile/>
         },
         {
           path: 'allUsers',
@@ -99,6 +117,11 @@ import SearchPage from "../Pages/SearchPage/SearchPage";
         {
           path: 'content-management/add-blog',
           element: <AddBlog/>
+        },
+       
+        {
+          path: 'donor-profile',
+          element: <DonorProfile/>
         }
       ]
     }

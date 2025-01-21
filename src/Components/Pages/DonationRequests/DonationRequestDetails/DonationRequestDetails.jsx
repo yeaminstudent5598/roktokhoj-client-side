@@ -1,48 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import useAuth from "../../../../Hooks/useAuth";
 import useAxiosPublic from "../../../../Hooks/useAxiosPublic";
 import useAxiosSecure from "../../../../Hooks/axiosSecure";
+import { useQuery } from "@tanstack/react-query"; // Import useQuery from TanStack Query
 
 const DonationRequestDetails = () => {
-  const {user} = useAuth();
-  const axiosPublic =useAxiosPublic();
-  const axiosSecure =useAxiosSecure();
-
+  const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const { id } = useParams();
-  const [donationRequest, setDonationRequest] = useState(null);
-  const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-
-  // Fetch donation request details
-  const fetchDonationRequest = async () => {
-    try {
-      const response = await axiosSecure.get(
-        `/create-donation-request/${id}`
-      );
-      setDonationRequest(response.data);
-    } catch (error) {
-      if (error.response?.status === 404) {
-        console.error("Donation request not found.");
-        setError("Donation request not found. Please check the ID.");
-      } else {
-        console.error("Error fetching donation request details:", error);
-        setError("An unexpected error occurred. Please try again later.");
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchDonationRequest();
-  }, [id]);
+  // Fetch donation request details using TanStack Query
+  const { data: donationRequest, isLoading, isError, error } = useQuery({
+    queryKey: ["donationRequest", id], // Unique query key
+    queryFn: async () => {
+      const response = await axiosSecure.get(`/create-donation-request/${id}`);
+      return response.data;
+    },
+    enabled: !!id, // Ensure query runs only when ID is available
+  });
 
   // Handle donation confirmation
   const handleConfirmDonation = async () => {
     try {
-      // Simulate API request to update donation status
       await axiosPublic.patch(`/donation-details/${id}`, {
         status: "inprogress",
         donorName: user.displayName,
@@ -67,17 +51,22 @@ const DonationRequestDetails = () => {
     }
   };
 
-  if (error) {
+  // Handle loading and error states
+  if (isLoading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+
+  if (isError) {
     return (
       <div className="text-center py-10">
         <h2 className="text-2xl font-bold text-red-500">Error</h2>
-        <p className="text-gray-600">{error}</p>
+        <p className="text-gray-600">
+          {error.response?.status === 404
+            ? "Donation request not found. Please check the ID."
+            : "An unexpected error occurred. Please try again later."}
+        </p>
       </div>
     );
-  }
-
-  if (!donationRequest) {
-    return <div className="text-center py-10">Loading...</div>;
   }
 
   return (
@@ -148,7 +137,7 @@ const DonationRequestDetails = () => {
                   className="btn btn-primary mr-2"
                   onClick={handleConfirmDonation}
                 >
-                  Confirm Donation
+                  Confirm Donation 
                 </button>
                 <button
                   type="button"

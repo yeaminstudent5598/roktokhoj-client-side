@@ -5,9 +5,13 @@ import Swal from "sweetalert2";
 import ReactPaginate from "react-paginate";
 import useAxiosSecure from "../../../../Hooks/axiosSecure";
 import { useNavigate } from "react-router-dom";
+import useAdmin from "../../../../Hooks/useAdmin";
+import useValunteer from "../../../../Hooks/useVolunteer";
 
 const AllBloodDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
+  const [isAdmin] = useAdmin();
+  const [isValunteer] = useValunteer();
   const navigate = useNavigate();
   const { data: requests = [], refetch } = useQuery({
     queryKey: ["blood-donation-requests"],
@@ -69,7 +73,35 @@ const AllBloodDonationRequests = () => {
       }
     });
   };
-  
+
+  const handleStatusUpdate = (id, status) => {
+    Swal.fire({
+      title: "Update Status",
+      input: "select",
+      inputOptions: {
+        pending: "Pending",
+        inprogress: "In Progress",
+        done: "Done",
+        canceled: "Canceled",
+      },
+      inputValue: status,
+      showCancelButton: true,
+      confirmButtonText: "Update",
+      showLoaderOnConfirm: true,
+      preConfirm: (newStatus) => {
+        return axiosSecure
+          .patch(`/create-donation-request/${id}`, { status: newStatus })
+          .then(() => {
+            refetch();
+            Swal.fire("Updated!", "Donation status updated successfully.", "success");
+          })
+          .catch((err) => {
+            Swal.fire("Error", "Failed to update status.", "error");
+            console.error(err);
+          });
+      },
+    });
+  };
 
   return (
     <div className="p-8">
@@ -115,26 +147,42 @@ const AllBloodDonationRequests = () => {
                 <td>{request.requesterEmail}</td>
                 <td>{request.status}</td>
                 <td className="border border-gray-300 px-4 py-2 flex space-x-2">
-                  <button
-                    className="btn btn-sm btn-info"
-                    onClick={() => navigate(`/donation-details/${request._id}`)}
-                  >
-                    View
-                  </button>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() =>
-                      navigate(`/dashboard/edit-create-request/${request._id}`)
-                    }
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(request._id)} // Delete action
-                  >
-                    Delete
-                  </button>
+                  {isAdmin && (
+                    <>
+                      <button
+                        className="btn btn-sm btn-info"
+                        onClick={() =>
+                          navigate(`/donation-details/${request._id}`)
+                        }
+                      >
+                        View
+                      </button>
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() =>
+                          navigate(`/dashboard/edit-create-request/${request._id}`)
+                        }
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleDelete(request._id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                  {isValunteer && (
+                    <button
+                      className="btn btn-sm btn-warning"
+                      onClick={() =>
+                        handleStatusUpdate(request._id, request.status)
+                      }
+                    >
+                      Update Status
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

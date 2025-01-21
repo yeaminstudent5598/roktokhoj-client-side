@@ -195,7 +195,7 @@ const AllUsers = () => {
                               : "btn-success"
                           }`}
                         >
-                          {user.status === "active" ? "Block" : "Unblock"}
+                          {user.status === "active" ? "block" : "unblock"}
                         </button>
                       </li>
                       <li>

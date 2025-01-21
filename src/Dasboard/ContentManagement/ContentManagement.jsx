@@ -3,10 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/axiosSecure";
-
+import useAdmin from "../../Hooks/useAdmin";
+import useValunteer from "../../Hooks/useVolunteer";
 
 const ContentManagement = () => {
   const axiosSecure = useAxiosSecure();
+  const [isAdmin] = useAdmin();
+  const [isValunteer] = useValunteer();
   const { data: blogs = [], refetch } = useQuery({
     queryKey: ["blogs"],
     queryFn: async () => {
@@ -97,7 +100,7 @@ const ContentManagement = () => {
             <h3 className="text-lg font-semibold mb-2">{blog.title}</h3>
             <p className="text-sm mb-4">{blog.content.slice(0, 100)}...</p>
             <div className="flex justify-between items-center">
-              {blog.status === "draft" ? (
+              {blog.status === "draft" && isAdmin ? (
                 <button
                   className="btn btn-success btn-sm"
                   onClick={() => handleStatusChange(blog, "published")}
@@ -105,19 +108,25 @@ const ContentManagement = () => {
                   Publish
                 </button>
               ) : (
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={() => handleStatusChange(blog, "draft")}
-                >
-                  Unpublish
-                </button>
+                isAdmin && (
+                  <button
+                    className="btn btn-warning btn-sm"
+                    onClick={() => handleStatusChange(blog, "draft")}
+                  >
+                    Unpublish
+                  </button>
+                )
               )}
-              <button
-                className="btn btn-error btn-sm"
-                onClick={() => handleDelete(blog._id)}
-              >
-                Delete
-              </button>
+              {isAdmin ? (
+                <button
+                  className="btn btn-error btn-sm"
+                  onClick={() => handleDelete(blog._id)}
+                >
+                  Delete
+                </button>
+              ) : (
+                <p className="text-sm text-gray-500">Restricted</p>
+              )}
             </div>
           </div>
         ))}
