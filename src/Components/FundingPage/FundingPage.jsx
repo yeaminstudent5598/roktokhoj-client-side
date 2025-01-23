@@ -45,9 +45,9 @@ const FundingPage = () => {
     try {
       const response = await axiosSecure.post("/create-payment-intent", {
         amount: Math.round(parseFloat(amount) * 100),
-        user: user.disaplayName,
       });
 
+      const { clientSecret } = response.data;
 
       const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -56,7 +56,7 @@ const FundingPage = () => {
         },
     });
 
-    console.log(payment_method);
+
     
       if (error) {
         Swal.fire("Error", "Payment failed. Please try again.", "error");
