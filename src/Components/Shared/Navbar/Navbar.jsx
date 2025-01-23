@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
+import { MdDashboard } from "react-icons/md";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -110,25 +111,31 @@ const Navbar = () => {
               </div>
             </label>
             <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <NavLink
-                  to="/dashboard"
-                  className={({ isActive }) =>
-                    isActive ? "text-primary font-bold" : ""
-                  }
-                >
-                  Dashboard
-                </NavLink>
-              </li>
-              <li>
-                <button onClick={handleLogout} className="btn btn-error">
-                  Logout
-                </button>
-              </li>
-            </ul>
+  tabIndex={0}
+  className="menu menu-compact dropdown-content mt-3 p-3 shadow-lg bg-red-50 rounded-md w-56 border border-red-200"
+>
+  <li className="mb-2">
+    <NavLink
+      to="/dashboard"
+      className={({ isActive }) =>
+        isActive
+          ? "flex items-center gap-2 text-red-700 font-semibold hover:text-red-800"
+          : "flex items-center gap-2 text-gray-700 hover:text-red-700"
+      }
+    >
+      <MdDashboard className="text-lg" /> Dashboard
+    </NavLink>
+  </li>
+  <li>
+    <button
+      onClick={handleLogout}
+      className="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-md flex justify-center items-center"
+    >
+      Logout
+    </button>
+  </li>
+</ul>
+
           </div>
         ) : (
           <NavLink

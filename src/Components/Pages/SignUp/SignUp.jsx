@@ -87,6 +87,7 @@ const SignUp = () => {
         upazila: data.upazila,
         district: districtName, // Use the found district name
         image: imageUrl,
+        status: "active",
       };
   
       console.log(userInfo);

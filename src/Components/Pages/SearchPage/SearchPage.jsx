@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/axiosSecure";
+import { jsPDF } from "jspdf"; // Import jsPDF
 
 const SearchPage = () => {
   const axiosSecure = useAxiosSecure();
@@ -9,8 +10,6 @@ const SearchPage = () => {
     district: "",
     upazila: "",
   });
- 
- 
 
   // Fetch district data
   const { data: districtData = [], isLoading: isDistrictLoading } = useQuery({
@@ -21,11 +20,11 @@ const SearchPage = () => {
       return data[2]?.data || [];
     },
   });
-  const districtName = (id) =>{
-    const districsname = districtData.find(item => item.id == id)
-    
-    return districsname?.name
-  }
+  const districtName = (id) => {
+    const districsname = districtData.find(item => item.id == id);
+    return districsname?.name;
+  };
+
   // Fetch upazila data
   const { data: upazilaData = [], isLoading: isUpazilaLoading } = useQuery({
     queryKey: ["upazilas"],
@@ -46,8 +45,8 @@ const SearchPage = () => {
     setSearchCriteria((prev) => ({ ...prev, [name]: value }));
   };
 
-   // Fetch users data based on search criteria
-   const { data: users = [], isLoading: isUsersLoading } = useQuery({
+  // Fetch users data based on search criteria
+  const { data: users = [], isLoading: isUsersLoading } = useQuery({
     queryKey: [
       "users",
       searchCriteria.bloodGroup,
@@ -55,8 +54,8 @@ const SearchPage = () => {
       searchCriteria.upazila,
     ],
     queryFn: async () => {
-      const response = await axiosSecure.get("/users", {
-        params: {...searchCriteria, district: districtName(searchCriteria.district)},
+      const response = await axiosSecure.get("/users/normal", {
+        params: { ...searchCriteria, district: districtName(searchCriteria.district) },
       });
       return response.data;
     },
@@ -65,6 +64,35 @@ const SearchPage = () => {
   if (isUsersLoading || isDistrictLoading || isUpazilaLoading) {
     return <div>Loading...</div>;
   }
+
+  // Function to generate PDF
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    // Title for the PDF
+    doc.setFontSize(18);
+    doc.text("Donors Search Results", 20, 20);
+
+    // Loop through users and add them to the PDF
+    let y = 30; // y-axis start position for the content
+    users.forEach((user, index) => {
+      doc.setFontSize(12);
+      doc.text(`Name: ${user.name}`, 20, y);
+      doc.text(`Blood Group: ${user.bloodGroup}`, 20, y + 10);
+      doc.text(`Location: ${user.upazila}, ${user.district}`, 20, y + 20);
+      doc.text(`Contact: ${user.email}`, 20, y + 30);
+      y += 40; // Move down for the next user
+      
+      // Add a page if the content exceeds the page
+      if (y > 250) {
+        doc.addPage();
+        y = 20; // Reset y position for new page
+      }
+    });
+
+    // Save the generated PDF
+    doc.save("donor_results.pdf");
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -162,6 +190,18 @@ const SearchPage = () => {
           <p className="text-gray-500">No donors found for the selected criteria.</p>
         )}
       </div>
+
+      {/* Download Button */}
+      {users.length > 0 && (
+        <div className="text-center mt-6">
+          <button
+            onClick={generatePDF}
+            className="btn btn-primary"
+          >
+            Download Search Results as PDF
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAuth from "../../Hooks/useAuth";
@@ -9,37 +9,26 @@ const DonorDashboard = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const [donationRequestse, setDonationRequests] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-
-
-  
-
-  const { data: donationRequests = [],refetch, isLoading, error } = useQuery({
+  const { data: donationRequests = [], refetch, isLoading } = useQuery({
     queryKey: ["donationRequests", user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
       const res = await axiosSecure.get(`/donation-request/${user.email}`);
-      setLoading(false)
       return res.data;
     },
-    enabled: !!user?.email,  
-    onSuccess: () => setLoading(false),
-    onError: () => setLoading(false),
+    enabled: !!user?.email,
   });
-  
-  
-
 
   const handleStatusChange = (id, newStatus) => {
     axiosSecure
       .patch(`/create-donation-request/${id}`, { status: newStatus })
       .then(() => {
-        refetch()
-        Swal.fire("Success!", `Donation request marked as ${newStatus}.`, "success");
-        setDonationRequests((prev) =>
-          prev.map((req) => (req.id === id ? { ...req, status: newStatus } : req))
+        refetch();
+        Swal.fire(
+          "Success!",
+          `Donation request marked as ${newStatus}.`,
+          "success"
         );
       })
       .catch((err) => {
@@ -61,8 +50,8 @@ const DonorDashboard = () => {
         axiosSecure
           .delete(`/create-donation-request/${id}`)
           .then(() => {
+            refetch();
             Swal.fire("Deleted!", "The donation request has been deleted.", "success");
-            setDonationRequests((prev) => prev.filter((req) => req._id !== id));  
           })
           .catch((err) => {
             Swal.fire("Error!", "Failed to delete request. Please try again.", "error");
@@ -71,27 +60,26 @@ const DonorDashboard = () => {
       }
     });
   };
-  
 
   const handleViewRequest = (id) => {
     if (!user) {
-      // If user is not logged in, redirect to the login page
       navigate("/login");
     } else {
-      // Navigate to the donation request details page
       navigate(`/donation-details/${id}`);
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <p className="text-center">Loading...</p>;
   }
 
+  const recentRequests = donationRequests.slice(0, 3);
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Welcome, {user?.name}!</h1>
+      <h1 className="text-3xl font-bold mb-6">Welcome, {user?.name || user?.displayName}!</h1>
 
-      {donationRequests.length > 0 ? (
+      {recentRequests.length > 0 ? (
         <div>
           <h2 className="text-xl font-semibold mb-4">Recent Donation Requests</h2>
           <table className="table-auto w-full border-collapse border border-gray-300">
@@ -107,7 +95,7 @@ const DonorDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {donationRequests.map((req) => (
+              {recentRequests.map((req) => (
                 <tr key={req.id} className="hover:bg-gray-100">
                   <td className="border border-gray-300 px-4 py-2">{req.recipientName}</td>
                   <td className="border border-gray-300 px-4 py-2">

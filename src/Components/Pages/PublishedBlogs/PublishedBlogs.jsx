@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic"; 
 import { FaSearch } from "react-icons/fa";
 import DOMPurify from "dompurify";
-import { useQuery } from "@tanstack/react-query"; // Import useQuery from TanStack Query
+import { useQuery } from "@tanstack/react-query";
+import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, FacebookIcon, TwitterIcon, LinkedinIcon } from "react-share"; // Import share buttons
 
 const PublishedBlogs = () => {
   const axiosPublic = useAxiosPublic();
@@ -107,6 +108,20 @@ const PublishedBlogs = () => {
                     Read More
                   </button>
                 </div>
+
+                {/* Social Media Share Buttons */}
+<div className="mt-4 flex space-x-4">
+  <FacebookShareButton url={window.location.href} quote={blog.title}>
+    <FacebookIcon size={32} round />
+  </FacebookShareButton>
+  <TwitterShareButton url={window.location.href} title={blog.title}>
+    <TwitterIcon size={32} round />
+  </TwitterShareButton>
+  <LinkedinShareButton url={window.location.href}>
+    <LinkedinIcon size={32} round />
+  </LinkedinShareButton>
+</div>
+
               </div>
             </div>
           ))

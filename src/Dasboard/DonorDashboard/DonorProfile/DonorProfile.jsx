@@ -17,12 +17,11 @@ const DonorProfile = () => {
     queryKey: ["userProfile", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}`);
-      console.log( "user info", res.data);
+      console.log("user info", res.data);
       return res.data;
     },
     enabled: !!user?.email,
   });
-  
 
   // Mutation for updating the profile
   const updateProfileMutation = useMutation({
@@ -44,7 +43,6 @@ const DonorProfile = () => {
       console.error(error);
     },
   });
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,103 +66,114 @@ const DonorProfile = () => {
   }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded-xl shadow-md space-y-4">
-      
-      <div className="flex flex-col items-center space-y-4">
+    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <div className="flex items-center space-x-4 pb-6 border-b border-gray-300">
         <div className="avatar">
-          <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src={profile?.image || "https://via.placeholder.com/150"} alt="Avatar" />
+          <div className="w-20 h-20 rounded-full ring ring-orange-400 ring-offset-2">
+            <img
+              src={profile?.image || "https://via.placeholder.com/150"}
+              alt="Avatar"
+            />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-center text-gray-800">Donor Profile</h2>
-        <p>{profile.email}</p>
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            {profile?.name || "Donor Name"}
+          </h2>
+          <p className="text-gray-600">{profile?.email}</p>
+        </div>
       </div>
 
-      <form className="space-y-4">
-        <div className="form-control">
-          <label className="label font-semibold">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={isEditing ? updatedProfile?.name : profile?.name}
-            onChange={handleInputChange}
-            className={`input input-bordered w-full ${isEditing ? "" : "bg-gray-200 cursor-not-allowed"}`}
-            disabled={!isEditing}
-          />
+      <form className="space-y-6 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="form-control">
+            <label className="label font-semibold text-gray-700">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={isEditing ? updatedProfile?.name : profile?.name}
+              onChange={handleInputChange}
+              className={`input input-bordered w-full ${
+                isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+              }`}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-control">
+            <label className="label font-semibold text-gray-700">District</label>
+            <input
+              type="text"
+              name="district"
+              value={isEditing ? updatedProfile?.district : profile?.district}
+              onChange={handleInputChange}
+              className={`input input-bordered w-full ${
+                isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+              }`}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-control">
+            <label className="label font-semibold text-gray-700">Upazila</label>
+            <input
+              type="text"
+              name="upazila"
+              value={isEditing ? updatedProfile?.upazila : profile?.upazila}
+              onChange={handleInputChange}
+              className={`input input-bordered w-full ${
+                isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+              }`}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="form-control">
+            <label className="label font-semibold text-gray-700">Blood Group</label>
+            {isEditing ? (
+              <select
+                name="bloodGroup"
+                value={updatedProfile?.bloodGroup || ""}
+                onChange={handleInputChange}
+                className="select select-bordered w-full"
+              >
+                <option value="" disabled>
+                  Select your blood group
+                </option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                name="bloodGroup"
+                value={profile?.bloodGroup || "Not specified"}
+                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+                disabled
+              />
+            )}
+          </div>
         </div>
-        <div className="form-control">
-          <label className="label font-semibold">District</label>
-          <input
-            type="text"
-            name="district"
-            value={isEditing ? updatedProfile?.district : profile?.district}
-            onChange={handleInputChange}
-            className={`input input-bordered w-full ${isEditing ? "" : "bg-gray-200 cursor-not-allowed"}`}
-            disabled={!isEditing}
-          />
-        </div>
-        <div className="form-control">
-          <label className="label font-semibold">Upazila</label>
-          <input
-            type="text"
-            name="upazila"
-            value={isEditing ? updatedProfile?.upazila : profile?.upazila}
-            onChange={handleInputChange}
-            className={`input input-bordered w-full ${isEditing ? "" : "bg-gray-200 cursor-not-allowed"}`}
-            disabled={!isEditing}
-          />
-        </div>
-        <div className="form-control">
-  <label className="label font-semibold">Blood Group</label>
-  {isEditing ? (
-    <select
-      name="bloodGroup"
-      value={updatedProfile?.bloodGroup || ""}
-      onChange={handleInputChange}
-      className="select select-bordered w-full"
-    >
-      <option value="" disabled>
-        Select your blood group
-      </option>
-      <option value="A+">A+</option>
-      <option value="A-">A-</option>
-      <option value="B+">B+</option>
-      <option value="B-">B-</option>
-      <option value="AB+">AB+</option>
-      <option value="AB-">AB-</option>
-      <option value="O+">O+</option>
-      <option value="O-">O-</option>
-    </select>
-  ) : (
-    <input
-      type="text"
-      name="bloodGroup"
-      value={profile?.bloodGroup}
-      className="input input-bordered w-full bg-gray-200 cursor-not-allowed"
-      disabled
-    />
-  )}
-</div>
-
       </form>
 
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-end mt-6">
         {isEditing ? (
           <button
             className="btn btn-primary flex items-center gap-2"
             onClick={handleSaveClick}
             disabled={updateProfileMutation.isLoading}
           >
-            <FiSave size={20} />
-            Save
+            <FiSave size={20} /> Save
           </button>
         ) : (
           <button
             className="btn btn-secondary flex items-center gap-2"
             onClick={handleEditClick}
           >
-            <FiEdit size={20} />
-            Edit
+            <FiEdit size={20} /> Edit
           </button>
         )}
       </div>

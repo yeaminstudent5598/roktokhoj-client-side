@@ -3,14 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import { FaUserFriends, FaHandHoldingUsd, FaHeartbeat } from "react-icons/fa";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 
-const AdminDashboard = () => {
+
+const VolunteerDashboard = () => {
   const axiosSecure = useAxiosSecure();
 
   // Fetch total users
   const { data: users = [], isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/users/normal");
+      const response = await axiosSecure.get("/users/volunteer");
       return response.data;
     },
   });
@@ -80,4 +81,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default VolunteerDashboard;

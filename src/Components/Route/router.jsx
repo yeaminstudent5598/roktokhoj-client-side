@@ -26,7 +26,17 @@ import AdminProfile from "../../Dasboard/AdminProfile/AdminProfile";
 import VolunteerProfile from "../../Dasboard/VolunteerProfile/VolunteerProfile";
 import BlogDetails from "../Pages/PublishedBlogs/BlogDetails/BlogDetails";
 import ErrorPage from "../../ErrorPage/ErrorPage";
-  const router = createBrowserRouter([
+import FundingPage from "../FundingPage/FundingPage";
+import VolunteerDashboard from "../../Dasboard/Volunteer/VolunteerDashboard";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+
+
+const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
+
+
+const router = createBrowserRouter([
     {
       path: "/",
       element: <MainLayOut/>,
@@ -63,12 +73,21 @@ import ErrorPage from "../../ErrorPage/ErrorPage";
         {
           path: '/search',
           element: <SearchPage/>
+        },
+        {
+          path: 'funding',
+          element: (
+            <Elements stripe={stripePromise}>
+              <FundingPage />
+            </Elements>
+          ),
         }
+        
       ]
     },
     {
       path: '/dashboard',
-      element: <Dashboard/>,
+      element: <PrivateRoute><Dashboard/></PrivateRoute>,
       children: [
         {
           path: 'admin-dashboard',
@@ -80,7 +99,7 @@ import ErrorPage from "../../ErrorPage/ErrorPage";
         },
         {
           path: 'volunteer-dashboard',
-          element: <AdminDashboard/>
+          element: <VolunteerDashboard/>
         },
         {
           path: 'volunteer-profile',

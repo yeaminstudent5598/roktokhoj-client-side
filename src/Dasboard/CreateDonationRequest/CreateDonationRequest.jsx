@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaHeart } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 import Swal from "sweetalert2";
@@ -53,7 +53,7 @@ const CreateDonationRequest = () => {
   const { data: users = [], isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/users");
+      const response = await axiosSecure.get("/users/normal");
       return response.data;
     },
   });
@@ -77,23 +77,23 @@ const CreateDonationRequest = () => {
       (district) => district.id === data.recipientDistrict
     );
 
-    const userInfo = {
+    const donationRequest = {
+      requesterName: user?.displayName,
+      requesterEmail: user?.email,
+      recipientName: data.recipientName,
+      recipientDistrict: selectedDistrict?.name || "",
+      recipientUpazila: data.recipientUpazila,
+      hospitalName: data.hospitalName,
+      fullAddress: data.fullAddress,
       bloodGroup: data.bloodGroup,
       donationDate: data.donationDate,
       donationTime: data.donationTime,
-      fullAddress: data.fullAddress,
-      hospitalName: data.hospitalName,
-      recipientDistrict: selectedDistrict?.name || "",
-      recipientName: data.recipientName,
-      recipientUpazila: data.recipientUpazila,
       requestMessage: data.requestMessage,
-      requesterEmail: user?.email,
-      requesterName: user?.displayName,
       status: "pending",
     };
 
     axiosSecure
-      .post("/create-donation-request", userInfo)
+      .post("/create-donation-request", donationRequest)
       .then(() => {
         Swal.fire({
           title: "Success!",
@@ -119,10 +119,34 @@ const CreateDonationRequest = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-bold text-center mb-6">
-        Create Donation Request
-      </h2>
+       {/* New Top Section */}
+<div className="flex justify-center items-center bg-red-600 text-white  rounded-t-lg">
+   {/* Left Side Image */}
+   <div className="flex-shrink-0">
+        <img
+          src="https://i.ibb.co/LtN4Pnc/Red-White-Blood-Donation-Instagram-Story-65b38a70e5df28-24233776.png"
+
+          alt="Blood Donation"
+          className="w-[240px] "
+        />
+      </div>
+  {/* Right Side Content */}
+  <div className="ml-4 flex flex-col">
+        <div className="flex items-center gap-2">
+          <FaHeart className="text-white text-2xl" />
+          <h1 className="text-2xl font-bold">Create Donation Request</h1>
+        </div>
+        <p className="text-sm  mt-2">
+          Confidential - Please answer the following questions correctly. This
+          will help to protect you and the patient who receives your blood.
+        </p>
+      </div>
+  
+</div>
+
+      <h2 className="text-3xl font-bold text-center mb-6"></h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Requester Information */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium">Requester Name</label>
@@ -130,7 +154,6 @@ const CreateDonationRequest = () => {
               type="text"
               value={user?.displayName}
               readOnly
-              {...register("requesterName")}
               className="input input-bordered w-full"
             />
           </div>
@@ -140,12 +163,12 @@ const CreateDonationRequest = () => {
               type="email"
               value={user?.email}
               readOnly
-              {...register("requesterEmail")}
               className="input input-bordered w-full"
             />
           </div>
         </div>
 
+        {/* Recipient Information */}
         <div>
           <label className="block text-sm font-medium">Recipient Name</label>
           <input
@@ -157,7 +180,6 @@ const CreateDonationRequest = () => {
             <span className="text-red-500 text-sm">{errors.recipientName.message}</span>
           )}
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium">Recipient District</label>
@@ -174,9 +196,6 @@ const CreateDonationRequest = () => {
                 </option>
               ))}
             </select>
-            {errors.recipientDistrict && (
-              <span className="text-red-500 text-sm">{errors.recipientDistrict.message}</span>
-            )}
           </div>
           <div>
             <label className="block text-sm font-medium">Recipient Upazila</label>
@@ -191,12 +210,10 @@ const CreateDonationRequest = () => {
                 </option>
               ))}
             </select>
-            {errors.recipientUpazila && (
-              <span className="text-red-500 text-sm">{errors.recipientUpazila.message}</span>
-            )}
           </div>
         </div>
 
+        {/* Additional Information */}
         <div>
           <label className="block text-sm font-medium">Hospital Name</label>
           <input
@@ -204,11 +221,15 @@ const CreateDonationRequest = () => {
             {...register("hospitalName", { required: "Hospital Name is required" })}
             className="input input-bordered w-full"
           />
-          {errors.hospitalName && (
-            <span className="text-red-500 text-sm">{errors.hospitalName.message}</span>
-          )}
         </div>
-
+        <div>
+          <label className="block text-sm font-medium">Full Address</label>
+          <input
+            type="text"
+            {...register("fullAddress", { required: "Address is required" })}
+            className="input input-bordered w-full"
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium">Blood Group</label>
@@ -226,9 +247,6 @@ const CreateDonationRequest = () => {
               <option value="O+">O+</option>
               <option value="O-">O-</option>
             </select>
-            {errors.bloodGroup && (
-              <span className="text-red-500 text-sm">{errors.bloodGroup.message}</span>
-            )}
           </div>
           <div>
             <label className="block text-sm font-medium">Donation Date</label>
@@ -237,18 +255,22 @@ const CreateDonationRequest = () => {
               {...register("donationDate", { required: "Donation Date is required" })}
               className="input input-bordered w-full"
             />
-            {errors.donationDate && (
-              <span className="text-red-500 text-sm">{errors.donationDate.message}</span>
-            )}
           </div>
         </div>
-
         <div>
-          <label className="block text-sm font-medium">Message</label>
+          <label className="block text-sm font-medium">Donation Time</label>
+          <input
+            type="time"
+            {...register("donationTime", { required: "Donation Time is required" })}
+            className="input input-bordered w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Request Message</label>
           <textarea
-            {...register("requestMessage")}
+            {...register("requestMessage", { required: "Message is required" })}
             className="textarea textarea-bordered w-full"
-            placeholder="Write your request message here..."
+            placeholder="Explain why you need blood..."
           ></textarea>
         </div>
 
