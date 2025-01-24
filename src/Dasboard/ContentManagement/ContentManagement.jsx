@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import DOMPurify from "dompurify";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 import useAdmin from "../../Hooks/useAdmin";
 import useValunteer from "../../Hooks/useVolunteer";
@@ -98,7 +99,13 @@ const ContentManagement = () => {
               className="h-40 w-full object-cover mb-4"
             />
             <h3 className="text-lg font-semibold mb-2">{blog.title}</h3>
-            <p className="text-sm mb-4">{blog.content.slice(0, 100)}...</p>
+            {/* Sanitize the blog content before rendering */}
+            <div
+              className="text-sm mb-4"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(blog.content.slice(0, 100)) + "...",
+              }}
+            ></div>
             <div className="flex justify-between items-center">
               {blog.status === "draft" && isAdmin ? (
                 <button
@@ -136,3 +143,4 @@ const ContentManagement = () => {
 };
 
 export default ContentManagement;
+ 

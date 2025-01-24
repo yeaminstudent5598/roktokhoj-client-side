@@ -2,9 +2,23 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FaUserFriends, FaHandHoldingUsd, FaHeartbeat } from "react-icons/fa";
 import useAxiosSecure from "../../Hooks/axiosSecure";
+import useAuth from "../../Hooks/useAuth";
 
 const AdminDashboard = () => {
   const axiosSecure = useAxiosSecure();
+  const {user} = useAuth();
+
+  // Fetch funds
+  const { data: funds = [], isLoading: isFundsLoading, isError } = useQuery({
+    queryKey: ["funds"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("create-payment-intent");
+      return res.data;
+    },
+  });
+
+  // Calculate total funds
+  const totalFunds = funds.reduce((sum, fund) => sum + (fund.amount || 0), 0);
 
   // Fetch total users
   const { data: users = [], isLoading: isUsersLoading } = useQuery({
@@ -27,13 +41,9 @@ const AdminDashboard = () => {
   // Calculate statistics
   const totalUsers = users.length;
   const totalRequests = donationRequests.length;
-  const totalFunding = donationRequests.reduce(
-    (total, request) => total + request.amount, // Assuming `amount` represents the donation amount
-    0
-  );
 
   // Loading state
-  if (isUsersLoading || isDonationsLoading) {
+  if (isFundsLoading || isUsersLoading || isDonationsLoading) {
     return (
       <div className="p-6 bg-gray-100 min-h-screen">
         <h1 className="text-center text-xl font-bold">Loading...</h1>
@@ -45,7 +55,7 @@ const AdminDashboard = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Welcome Section */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-bold mb-2">Welcome, Admin!</h1>
+        <h1 className="text-2xl font-bold mb-2">Welcome, {user.displayName}</h1>
         <p className="text-gray-600">
           Manage and track your organization's progress efficiently.
         </p>
@@ -64,7 +74,7 @@ const AdminDashboard = () => {
         <div className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center">
           <FaHandHoldingUsd className="text-4xl text-green-500 mb-4" />
           <h2 className="text-3xl font-bold mb-2">
-            ${totalFunding.toLocaleString()}
+            ${totalFunds.toLocaleString()}
           </h2>
           <p className="text-gray-600">Total Funding</p>
         </div>
