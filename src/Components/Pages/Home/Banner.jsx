@@ -33,7 +33,7 @@ const Banner = () => {
           >
             Rokto is a real-time free platform to help blood searchers connect
             voluntary blood donors around Bangladesh.
-          </motion.p>
+          </motion.p> 
           <div className="flex justify-center gap-4">
             {/* Updated Link for Join as a Donor */}
             <motion.div
