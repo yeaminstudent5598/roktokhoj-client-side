@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import toast from "react-hot-toast";
@@ -119,10 +119,10 @@ const SignUp = () => {
           </p>
         </div>
 
-        <div className=" card p-4 bg-base-100   shrink-0 shadow-2xl">
+        <div className=" card bg-base-100   shrink-0 shadow-2xl">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className=" space-y-4"
+            className="card-body grid grid-cols-1 lg:grid-cols-2 items-center space-y-4"
           >
             <div className="form-control">
               <label className="label">
@@ -140,13 +140,13 @@ const SignUp = () => {
             </div>
 
             <div className="form-control">
-              <label className="label">
-                <span className="label-text">Avatar</span>
+              <label>
+                <span className="label-text ">Avatar</span>
               </label>
               <input
                 type="file"
                 {...register("image", { required: "Avatar is required" })}
-                className="input input-bordered"
+                className=" file-input file-input-bordered"
               />
               {errors.image && (
                 <span className="text-red-600">{errors.image.message}</span>
@@ -291,7 +291,9 @@ const SignUp = () => {
               </button>
             </div>
           </form>
-         
+          <p className="my-4 text-black text-center">
+        Already Have a Account in RoktoKhoj? <Link to="/login" className="text-blue-500">Login Now</Link >
+      </p>
         </div>
       </div>
     </div>
