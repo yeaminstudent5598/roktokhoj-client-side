@@ -4,6 +4,7 @@ import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
+import toast from "react-hot-toast";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -95,7 +96,7 @@ const SignUp = () => {
       const dbRes = await axiosPublic.post("/users", userInfo);
   
       if (dbRes.data.insertedId) {
-        console.log("User profile added to database");
+        toast.success("Sign Up Successfully")       
         reset();
         navigate("/");
       }

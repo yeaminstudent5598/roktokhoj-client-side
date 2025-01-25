@@ -6,6 +6,7 @@ import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/axiosSecure";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
+
 const FundingPage = () => {
   const axiosSecure = useAxiosSecure();
   const axiosPublic = useAxiosPublic()
@@ -140,7 +141,7 @@ const FundingPage = () => {
 
       {/* Table of Funds */}
       {isLoading ? (
-        <p>Loading...</p>
+        <p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p>
       ) : isError ? (
         <p>Error loading data. Please try again later.</p>
       ) : (

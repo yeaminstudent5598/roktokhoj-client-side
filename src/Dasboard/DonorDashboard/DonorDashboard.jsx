@@ -70,7 +70,7 @@ const DonorDashboard = () => {
   };
 
   if (isLoading) {
-    return <p className="text-center">Loading...</p>;
+    return <p className="text-center"><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></p>;
   }
 
   const recentRequests = donationRequests.slice(0, 3);

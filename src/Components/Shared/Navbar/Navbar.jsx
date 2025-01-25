@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { MdDashboard } from "react-icons/md";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -9,10 +10,11 @@ const Navbar = () => {
   const handleLogout = () => {
     logOut()
       .then(() => {
-        console.log("User logged out successfully.");
+         toast.success("User logged out successfully.")
+       
       })
       .catch((error) => {
-        console.error("Logout Error:", error);
+        toast.error("Logout Error", error);
       });
   };
 

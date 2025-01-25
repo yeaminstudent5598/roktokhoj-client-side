@@ -2,7 +2,7 @@ import React from 'react';
 import Banner from './Banner';
 import FeatureSection from './FeatureSection';
 import ContactUs from './ContactUs';
-import ExtraSection from './ExtraSection';
+
 
 const Home = () => {
     return (
@@ -10,7 +10,7 @@ const Home = () => {
             <Banner/>
             <FeatureSection/>
             <ContactUs/>
-            <ExtraSection/>
+         
         </div>
     );
 };

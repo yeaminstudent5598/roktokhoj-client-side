@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [isAdmin] = useAdmin();
   const [isValunteer] = useValunteer();
 
+  
 
   const handleLogout = () => {
     logOut()
@@ -43,13 +44,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Budget Section */}
-        <div className="p-4 border-b">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium">Team Budget</h3>
-            <p className="font-bold text-lg">£65,915</p>
-          </div>
-        </div>
+       
 
         {/* Navigation Menu */}
         <ul className="menu p-4 space-y-2">
@@ -101,7 +96,7 @@ const Dashboard = () => {
                    : "flex items-center gap-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md p-2"
                }
              >
-               <FaHeart className="text-lg" /> All Blood Donation Requests
+               <MdBloodtype className="text-lg" /> All Blood Donation Requests
              </NavLink>
            </li>
            <li className="mb-2">
@@ -116,6 +111,18 @@ const Dashboard = () => {
                <FaBook className="text-lg" /> Content Management
              </NavLink>
            </li>
+           <li className="mb-2">
+              <NavLink
+                to="/dashboard/create-donation-request"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 text-red-600 font-semibold bg-red-50 rounded-md p-2 shadow-sm hover:bg-red-100"
+                    : "flex items-center gap-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md p-2"
+                }
+              >
+                <MdOutlineRequestPage className="text-lg" /> Create Donation Request
+              </NavLink>
+            </li>
            <li className="mt-4">
              <button
                onClick={handleLogout}
@@ -130,6 +137,18 @@ const Dashboard = () => {
           ) : isValunteer ? (
             // Volunteer Dashboard Links
             <>
+  <li className="mb-2">
+    <NavLink
+      to="/"
+      className={({ isActive }) =>
+        isActive
+          ? "flex items-center gap-2 text-blue-600 font-semibold bg-blue-50 rounded-md p-2 shadow-sm hover:bg-blue-100"
+          : "flex items-center gap-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-md p-2"
+      }
+    >
+      <FaHome className="text-lg" /> Go To Home
+    </NavLink>
+  </li>
   <li className="mb-2">
     <NavLink
       to="/dashboard/volunteer-dashboard"
@@ -251,6 +270,7 @@ const Dashboard = () => {
                 <MdOutlineRequestPage className="text-lg" /> Create Donation Request
               </NavLink>
             </li>
+            
             <li className="mt-4">
               <button
                 onClick={handleLogout}

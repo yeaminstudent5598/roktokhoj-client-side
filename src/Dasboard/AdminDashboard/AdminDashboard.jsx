@@ -46,7 +46,7 @@ const AdminDashboard = () => {
   if (isFundsLoading || isUsersLoading || isDonationsLoading) {
     return (
       <div className="p-6 bg-gray-100 min-h-screen">
-        <h1 className="text-center text-xl font-bold">Loading...</h1>
+        <h1 className="text-center text-xl font-bold"><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></h1>
       </div>
     );
   }

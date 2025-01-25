@@ -27,7 +27,7 @@ const DonationRequestDetails = () => {
   // Handle donation confirmation
   const handleConfirmDonation = async () => {
     try {
-      await axiosPublic.patch(`/donation-details/${id}`, {
+      await axiosSecure.patch(`/donation-details/${id}`, {
         status: "inprogress",
         donorName: user.displayName,
         donorEmail: user.email,
@@ -53,7 +53,7 @@ const DonationRequestDetails = () => {
 
   // Handle loading and error states
   if (isLoading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <div className="text-center py-10"><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></div>;
   }
 
   if (isError) {

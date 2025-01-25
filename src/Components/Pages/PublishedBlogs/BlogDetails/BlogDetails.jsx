@@ -23,7 +23,7 @@ const BlogDetails = () => {
 
   // Handle loading and error states
   if (isLoading) {
-    return <p className="text-center text-gray-500 pt-20">Loading...</p>;
+    return <p className="text-center text-gray-500 pt-20"><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></p>;
   }
 
   if (isError) {
@@ -35,7 +35,7 @@ const BlogDetails = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="max-w-6xl py-28 mx-auto p-6">
       <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">{blog.title}</h1>
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Image Section */}

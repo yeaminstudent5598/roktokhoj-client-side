@@ -62,7 +62,7 @@ const DonorProfile = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></div>;
   }
 
   return (
@@ -97,6 +97,19 @@ const DonorProfile = () => {
                 isEditing ? "" : "bg-gray-100 cursor-not-allowed"
               }`}
               disabled={!isEditing}
+            />
+          </div>
+          <div className="form-control">
+            <label className="label font-semibold text-gray-700">Email</label>
+            <input
+              type="text"
+              name="name"
+              value={isEditing ? updatedProfile?.email : profile?.email}
+              onChange={handleInputChange}
+              className={`input input-bordered w-full ${
+                isEditing ? "" : "bg-gray-100 cursor-not-allowed"
+              }`}
+              disabled={false}
             />
           </div>
           <div className="form-control">

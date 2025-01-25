@@ -62,7 +62,7 @@ const SearchPage = () => {
   });
 
   if (isUsersLoading || isDistrictLoading || isUpazilaLoading) {
-    return <div>Loading...</div>;
+    return <div><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></div>;
   }
 
   // Function to generate PDF

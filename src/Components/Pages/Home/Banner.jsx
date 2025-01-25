@@ -41,7 +41,7 @@ const Banner = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <Link to="/signUp">
+              <Link to="/dashboard">
                 <button className="btn btn-primary">Join as a Donor</button>
               </Link>
             </motion.div>
