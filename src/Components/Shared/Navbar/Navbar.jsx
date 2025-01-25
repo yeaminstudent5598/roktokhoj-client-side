@@ -3,19 +3,32 @@ import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { MdDashboard } from "react-icons/md";
 import toast from "react-hot-toast";
+import useAuth from "../../../Hooks/useAuth";
+import useAdmin from "../../../Hooks/useAdmin";
+import useValunteer from "../../../Hooks/useVolunteer";
+
+
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
+  const { user, logOut } = useAuth();
+  const [isAdmin] = useAdmin();
+  const [isValunteer] = useValunteer();
 
   const handleLogout = () => {
     logOut()
       .then(() => {
-         toast.success("User logged out successfully.")
-       
+        toast.success("User logged out successfully.");
       })
       .catch((error) => {
         toast.error("Logout Error", error);
       });
+  };
+
+  // Determine the appropriate profile route
+  const getDashboardLink = () => {
+    if (isAdmin) return "/dashboard/admin-profile";
+    if (isValunteer) return "/dashboard/volunteer-profile";
+    return "/dashboard/donor-profile";
   };
 
   // Navigation options based on user state
@@ -24,7 +37,9 @@ const Navbar = () => {
       <li>
         <NavLink
           to="/"
-          className={({ isActive }) => (isActive ? "text-primary font-bold" : "")}
+          className={({ isActive }) =>
+            isActive ? "text-primary font-bold" : ""
+          }
         >
           Home
         </NavLink>
@@ -32,7 +47,9 @@ const Navbar = () => {
       <li>
         <NavLink
           to="/donation-request"
-          className={({ isActive }) => (isActive ? "text-primary font-bold" : "")}
+          className={({ isActive }) =>
+            isActive ? "text-primary font-bold" : ""
+          }
         >
           Donation Requests
         </NavLink>
@@ -40,7 +57,9 @@ const Navbar = () => {
       <li>
         <NavLink
           to="/blog"
-          className={({ isActive }) => (isActive ? "text-primary font-bold" : "")}
+          className={({ isActive }) =>
+            isActive ? "text-primary font-bold" : ""
+          }
         >
           Blog
         </NavLink>
@@ -49,7 +68,9 @@ const Navbar = () => {
         <li>
           <NavLink
             to="/funding"
-            className={({ isActive }) => (isActive ? "text-primary font-bold" : "")}
+            className={({ isActive }) =>
+              isActive ? "text-primary font-bold" : ""
+            }
           >
             Funding
           </NavLink>
@@ -113,31 +134,30 @@ const Navbar = () => {
               </div>
             </label>
             <ul
-  tabIndex={0}
-  className="menu menu-compact dropdown-content mt-3 p-3 shadow-lg bg-red-50 rounded-md w-56 border border-red-200"
->
-  <li className="mb-2">
-    <NavLink
-      to="/dashboard"
-      className={({ isActive }) =>
-        isActive
-          ? "flex items-center gap-2 text-red-700 font-semibold hover:text-red-800"
-          : "flex items-center gap-2 text-gray-700 hover:text-red-700"
-      }
-    >
-      <MdDashboard className="text-lg" /> Dashboard
-    </NavLink>
-  </li>
-  <li>
-    <button
-      onClick={handleLogout}
-      className="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-md flex justify-center items-center"
-    >
-      Logout
-    </button>
-  </li>
-</ul>
-
+              tabIndex={0}
+              className="menu menu-compact dropdown-content mt-3 p-3 shadow-lg bg-red-50 rounded-md w-56 border border-red-200"
+            >
+              <li className="mb-2">
+                <NavLink
+                  to={getDashboardLink()} // Dynamically set dashboard link
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center gap-2 text-red-700 font-semibold hover:text-red-800"
+                      : "flex items-center gap-2 text-gray-700 hover:text-red-700"
+                  }
+                >
+                  <MdDashboard className="text-lg" /> Dashboard
+                </NavLink>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-md flex justify-center items-center"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
           </div>
         ) : (
           <NavLink

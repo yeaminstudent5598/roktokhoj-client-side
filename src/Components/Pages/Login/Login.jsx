@@ -35,6 +35,9 @@ const Login = () => {
       });
     })
 }
+if (user) {
+  return navigate("/");
+}
     return (
         <div>
           <div className="hero bg-red-500 min-h-screen">

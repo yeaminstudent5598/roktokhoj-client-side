@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import toast from "react-hot-toast";
+import useAuth from "../../../Hooks/useAuth";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const SignUp = () => {
   const axiosPublic = useAxiosPublic();
-  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, updateUserProfile } =useAuth();
   const navigate = useNavigate();
   const [districtData, setDistrictData] = useState([]);
   const [upazilaData, setUpazilaData] = useState([]);
@@ -26,6 +27,7 @@ const SignUp = () => {
     reset,
   } = useForm();
 
+  
   useEffect(() => {
     fetch("/districts.json")
       .then((res) => res.json())
@@ -117,10 +119,10 @@ const SignUp = () => {
           </p>
         </div>
 
-        <div className="card bg-base-100 md:w-1/2 max-w-sm shrink-0 shadow-2xl">
+        <div className=" card p-4 bg-base-100   shrink-0 shadow-2xl">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="card-body space-y-4"
+            className=" space-y-4"
           >
             <div className="form-control">
               <label className="label">
