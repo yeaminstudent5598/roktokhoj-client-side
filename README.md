@@ -1,21 +1,26 @@
 # RoktoKhoj - Blood Donation Application
 
 ## Description
-RoktoKhoj is a web platform designed to connect blood donors with people in need of blood donations. The application allows users to register as donors, create and manage donation requests, and interact with others for donation purposes. It aims to promote seamless and efficient blood donation in the community.
+RoktoKhoj is a blood donation platform designed to connect donors and recipients efficiently. The website helps individuals find nearby blood donors, create donation requests, and manage their donations. It also aims to facilitate the process for healthcare organizations and hospitals by offering an intuitive interface for managing blood requests.
+
+## Live Website
+You can visit the live version of RoktoKhoj at: [https://roktoKhoj.com](https://roktoKhoj.com)
+
+## Admin Credentials
+- **Username**: admin@roktoKhoj.com
+- **Password**: admin123
 
 ## Features
-- **User Registration**: Donors can sign up and manage their profiles.
-- **User Authentication**: Secure login and registration for donors, admins, and volunteers.
-- **Donation Requests**: Donors can view, create, and manage donation requests.
-- **Admin Dashboard**: Admins have full control over users, donation requests, and content.
-- **Role-based Access**: Different roles for admins, donors, and volunteers with specific privileges.
-- **CRUD Operations**: Implemented for donation requests, blogs, and user management.
-- **Content Management**: Admins can add, edit, and manage blog posts.
-- **Responsive Design**: Optimized for mobile, tablet, and desktop devices.
-- **Sweet Alerts**: Displayed for all CRUD operations and successful login/signup.
-- **Pagination & Filtering**: Available for donation requests and user data.
-- **Stripe Integration**: Allows users to donate funds to help organizations.
-- **JWT Authentication**: For protecting private routes and APIs.
+- **User Registration & Authentication**: Users can sign up as donors or requesters and manage their profiles securely.
+- **Donation Requests**: Donors can create, view, and manage donation requests to help patients in need.
+- **Admin Dashboard**: Admins can monitor users, donation requests, and overall system activity.
+- **Role-based Access**: Different access levels for donors, requesters, and admins to ensure smooth management.
+- **CRUD Operations**: Admins can add, edit, and delete donation requests and manage user accounts.
+- **Real-time Notifications**: Users and admins receive updates about donation status and requests.
+- **Search & Filter**: Users can search for blood donations based on location, blood type, and urgency.
+- **Stripe Integration**: Donors can contribute funds to support healthcare organizations using Stripe.
+- **Responsive Design**: The application is optimized for both mobile and desktop devices.
+- **Security**: JWT (JSON Web Token) authentication for secure and private access to donor data.
 
 ## Installation
 
@@ -23,9 +28,9 @@ RoktoKhoj is a web platform designed to connect blood donors with people in need
 - Node.js
 - MongoDB
 - Firebase (for authentication)
-- Stripe (for funding)
+- Stripe (for donations)
 
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/roktoKhoj.git
+   git clone https://github.com/Programming-Hero-Web-Course4/b10a12-client-side-yeaminstudent5598.git

@@ -22,7 +22,7 @@ const Login = () => {
     const password = form.password.value;
     console.log(email, password);
 
-    signIn(email, password)
+    signIn(email, password) 
     .then(result => {
       const user = result.user;
       console.log(user);
