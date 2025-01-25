@@ -4,7 +4,7 @@
 RoktoKhoj is a blood donation platform designed to connect donors and recipients efficiently. The website helps individuals find nearby blood donors, create donation requests, and manage their donations. It also aims to facilitate the process for healthcare organizations and hospitals by offering an intuitive interface for managing blood requests.
 
 ## Live Website
-You can visit the live version of RoktoKhoj at: [https://roktoKhoj.com](https://roktoKhoj.com)
+You can visit the live version of RoktoKhoj at: [https://roktokhoj.web.app/]
 
 ## Admin Credentials
 - **Username**: admin@roktoKhoj.com

@@ -12,7 +12,7 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 
 const SignUp = () => {
   const axiosPublic = useAxiosPublic();
-  const { createUser, updateUserProfile } =useAuth();
+  const { createUser, updateUserProfile, user } =useAuth();
   const navigate = useNavigate();
   const [districtData, setDistrictData] = useState([]);
   const [upazilaData, setUpazilaData] = useState([]);
@@ -27,7 +27,11 @@ const SignUp = () => {
     reset,
   } = useForm();
 
-  
+  useEffect(() => {
+    if (user) {
+      navigate("/"); // Redirect to home if user is logged in
+    }
+  }, [user, navigate]);
   useEffect(() => {
     fetch("/districts.json")
       .then((res) => res.json())
