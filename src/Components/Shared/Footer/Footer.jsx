@@ -40,7 +40,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-
+ 
           {/* Section 3: Social Media */}
           <div>
             <h2 className="text-xl font-bold mb-3">Follow Us</h2>
