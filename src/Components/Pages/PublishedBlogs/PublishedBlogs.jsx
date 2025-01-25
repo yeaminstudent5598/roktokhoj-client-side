@@ -46,7 +46,7 @@ const PublishedBlogs = () => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(date).toLocaleDateString(undefined, options);
   };
-
+ 
   if (isLoading) return <p><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></p>;
   if (isError) return <p>Error fetching blogs: {error.message}</p>;
 
