@@ -94,7 +94,7 @@ const Dashboard = () => {
                  isActive
                    ? "flex items-center gap-2 text-red-600 font-semibold bg-red-50 rounded-md p-2 shadow-sm hover:bg-red-100"
                    : "flex items-center gap-2 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md p-2"
-               }
+               } 
              >
                <MdBloodtype className="text-lg" /> All Blood Donation Requests
              </NavLink>
