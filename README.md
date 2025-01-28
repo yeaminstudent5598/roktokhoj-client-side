@@ -31,4 +31,4 @@ You can visit the live version of RoktoKhoj at: [https://roktokhoj.web.app/]
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Programming-Hero-Web-Course4/b10a12-client-side-yeaminstudent5598.git
+   git clone https://github.com/yeaminstudent5598/roktokhoj-client-side.git
