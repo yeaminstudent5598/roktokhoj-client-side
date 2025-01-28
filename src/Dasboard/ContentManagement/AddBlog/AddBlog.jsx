@@ -43,7 +43,7 @@ const AddBlog = () => {
       const newBlog = { title, thumbnail: imageUrl, content, status: "draft" };
       // Send the blog data to your API
     await axiosSecure.post("/blogs", newBlog);
-    console.log(newBlog);
+   
 
       Swal.fire("Success", "Blog created successfully!", "success");
     } catch (err) {

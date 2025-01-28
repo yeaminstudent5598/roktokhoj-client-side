@@ -80,7 +80,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar fixed bg-red-700 z-10 shadow-lg">
+    <div className="navbar fixed bg-opacity-80 bg-red-700 z-10 shadow-lg">
       {/* Navbar Start */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -117,6 +117,7 @@ const Navbar = () => {
             alt="RoktoKhoj Logo"
           />
         </a>
+        <h2 className="font-bold text-2xl ml-2"><span className="text-red-600">Rokto</span>Khoj</h2>
       </div>
 
       {/* Navbar Center */}

@@ -5,7 +5,8 @@ import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../Hooks/useAdmin";
 import useValunteer from "../Hooks/useVolunteer";
 import useAuth from "../Hooks/useAuth";
-import { FaPersonRifle } from "react-icons/fa6";
+
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
     const {user, logOut} = useAuth();
@@ -18,10 +19,11 @@ const Dashboard = () => {
   const handleLogout = () => {
     logOut()
       .then(() => {
-        console.log("User logged out successfully.");
+        toast.success("User logged out successfully.")
+        console.log("logout successfully");
       })
       .catch((error) => {
-        console.error("Logout Error:", error);
+         toast.error("Logout Error:", error)
       });
   };
 

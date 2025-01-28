@@ -97,7 +97,7 @@ const SignUp = () => {
         status: "active",
       };
   
-      console.log(userInfo);
+     
   
       const dbRes = await axiosPublic.post("/users", userInfo);
   

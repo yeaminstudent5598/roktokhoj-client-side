@@ -19,18 +19,17 @@ const FundingPage = () => {
   const elements = useElements();
 
   // Fetch funding data with React Query
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["funds"],
     queryFn: async () => {
       const res = await axiosPublic.get("create-payment-intent");
       return res.data;
     },
   });
-  console.log("API Response:", data);
+
   const funds = Array.isArray(data) ? data : []; 
-  console.log(funds);
+
   const totalFunds = funds.reduce((sum, fund) => sum + (fund.amount || 0), 0);
-  console.log("total funds", totalFunds);
 
   // Handle donation submission
   const handleDonation = async (e) => {
@@ -42,6 +41,7 @@ const FundingPage = () => {
     }
   
     if (!stripe || !elements) {
+      
       Swal.fire("Error", "Stripe has not loaded yet.", "error");
       return;
     }
@@ -64,7 +64,7 @@ const FundingPage = () => {
         date: new Date().toISOString(),
       };
   
-      console.log("Payment Intent Payload:", paymentPayload);
+    
   
       const { data } = await axiosSecure.post(`/create-payment-intent`, paymentPayload);
       const { clientSecret} = data;
@@ -92,7 +92,7 @@ const FundingPage = () => {
         avatar: user?.avatar || "default_avatar_url",
       };
   
-      console.log("Saving Payment Details Payload:", savePayload);
+      
   
       const saveResponse = await axiosSecure.post(`/save-payment-intent`, savePayload);
   
@@ -103,6 +103,7 @@ const FundingPage = () => {
       }
   
       // Step 4: Success Handling
+      refetch();
       Swal.fire("Success", "Your donation was successful!", "success");
       setAmount("");
      

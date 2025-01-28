@@ -3,20 +3,21 @@ import { motion } from "framer-motion"; // Import Framer Motion
 
 const Banner = () => {
   return (
-    <div className="hero">
+    <div className="relative min-h-screen">
+      {/* Background Image */}
       <img
-        className="min-h-screen"
-        src="https://i.ibb.co.com/8DFQYrf/DALL-E-2025-01-23-12-02-50-A-modern-and-sleek-website-banner-design-for-a-blood-donation-platform-na.png"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+        src="https://i.ibb.co.com/4KRPgfy/cover.png"
         alt="Blood donation"
       />
-      <div className="hero-overlay"></div>
-      <motion.div
-        className="hero-content text-center text-neutral-content"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }} // Fade-in effect
-      >
-        <div className="max-w-xl">
+      {/* Content */}
+      <div className="relative top-40 z-10 flex items-center h-full">
+        <motion.div
+          className="ml-8  text-left text-neutral-content max-w-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }} // Fade-in effect
+        >
           <motion.h1
             className="mb-5 text-5xl font-bold"
             initial={{ y: -50, opacity: 0 }}
@@ -33,8 +34,8 @@ const Banner = () => {
           >
             Rokto is a real-time free platform to help blood searchers connect
             voluntary blood donors around Bangladesh.
-          </motion.p> 
-          <div className="flex justify-center gap-4">
+          </motion.p>
+          <div className="flex gap-4">
             {/* Updated Link for Join as a Donor */}
             <motion.div
               initial={{ scale: 0.8 }}
@@ -55,8 +56,8 @@ const Banner = () => {
               </Link>
             </motion.div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };

@@ -17,7 +17,7 @@ const DonorProfile = () => {
     queryKey: ["userProfile", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}`);
-      console.log("user info", res.data);
+    
       return res.data;
     },
     enabled: !!user?.email,
