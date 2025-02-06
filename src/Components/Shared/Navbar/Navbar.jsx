@@ -80,7 +80,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar fixed bg-opacity-80 bg-red-700 z-10 shadow-lg">
+    <div className="navbar fixed bg-opacity-30 bg-white z-10 shadow-lg">
       {/* Navbar Start */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -130,7 +130,7 @@ const Navbar = () => {
         {user ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
+              <div className="w-10 rounded-full border-2 border-red-600">
                 <img src={user.photoURL} alt={user.displayName} />
               </div>
             </label>

@@ -51,7 +51,7 @@ const PublishedBlogs = () => {
   if (isError) return <p>Error fetching blogs: {error.message}</p>;
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-6 pt-24">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
         Published Blogs
       </h2>
