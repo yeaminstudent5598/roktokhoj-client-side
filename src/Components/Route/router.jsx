@@ -30,6 +30,7 @@ import FundingPage from "../FundingPage/FundingPage";
 import VolunteerDashboard from "../../Dasboard/Volunteer/VolunteerDashboard";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import BloodReserves from "../Pages/BloodReserves/BloodReserves";
 
 
 
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
         {
             path: '/signUp',
             element: <SignUp/>
+        },
+        {
+          path: "/blood-reserves",
+          element: <BloodReserves/>
         },
         {
           path: '/donation-request',

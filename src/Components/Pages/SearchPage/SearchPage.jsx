@@ -62,7 +62,20 @@ const SearchPage = () => {
   });
 
   if (isUsersLoading || isDistrictLoading || isUpazilaLoading) {
-    return <div><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></div>;
+    return <div> <div className="loading min-h-screen flex items-center justify-center bg-gray-50">
+    <svg width="64px" height="48px">
+      <polyline
+        points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"
+        id="back"
+        className="stroke-gray-300 stroke-2 fill-none"
+      ></polyline>
+      <polyline
+        points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"
+        id="front"
+        className="stroke-blue-500 stroke-2 fill-none animate-dash"
+      ></polyline>
+    </svg>
+  </div></div>;
   }
 
   // Function to generate PDF

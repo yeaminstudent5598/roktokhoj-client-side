@@ -142,7 +142,9 @@ const FundingPage = () => {
 
       {/* Table of Funds */}
       {isLoading ? (
-        <p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p>
+         <div className="loading min-h-screen flex items-center justify-center bg-gray-50">
+         <p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p>
+       </div>
       ) : isError ? (
         <p>Error loading data. Please try again later.</p>
       ) : (

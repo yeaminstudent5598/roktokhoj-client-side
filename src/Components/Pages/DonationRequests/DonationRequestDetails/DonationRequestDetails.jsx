@@ -53,7 +53,20 @@ const DonationRequestDetails = () => {
 
   // Handle loading and error states
   if (isLoading) {
-    return <div className="text-center py-10"><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></div>;
+    return <div className="text-center py-10"> <div className="loading min-h-screen flex items-center justify-center bg-gray-50">
+    <svg width="64px" height="48px">
+      <polyline
+        points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"
+        id="back"
+        className="stroke-gray-300 stroke-2 fill-none"
+      ></polyline>
+      <polyline
+        points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"
+        id="front"
+        className="stroke-blue-500 stroke-2 fill-none animate-dash"
+      ></polyline>
+    </svg>
+  </div></div>;
   }
 
   if (isError) {

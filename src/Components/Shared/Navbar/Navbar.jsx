@@ -65,22 +65,35 @@ const Navbar = () => {
         </NavLink>
       </li>
       {user && (
-        <li>
-          <NavLink
-            to="/funding"
-            className={({ isActive }) =>
-              isActive ? "text-primary font-bold" : ""
-            }
-          >
-            Funding
-          </NavLink>
-        </li>
+        <>
+          <li>
+            <NavLink
+              to="/funding"
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : ""
+              }
+            >
+              Funding
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/blood-reserves"
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : ""
+              }
+            >
+              Blood Reserves
+            </NavLink>
+          </li>
+        </>
       )}
     </>
   );
+  
 
   return (
-    <div className="navbar fixed bg-opacity-30 bg-white z-10 shadow-lg">
+    <div className="navbar w-full px-10 fixed bg-opacity-70 bg-white z-10 shadow-lg">
       {/* Navbar Start */}
       <div className="navbar-start">
         <div className="dropdown">
