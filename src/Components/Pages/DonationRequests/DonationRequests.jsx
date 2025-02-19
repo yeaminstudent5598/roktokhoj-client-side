@@ -11,6 +11,7 @@ const DonationRequests = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState("newest");
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedBloodGroup, setSelectedBloodGroup] = useState("");
 
   const fetchPendingRequests = async () => {
     const response = await axiosPublic.get("/create-donation-request");
@@ -32,7 +33,7 @@ const DonationRequests = () => {
 
   if (isLoading)
     return (
-      <div className="loading min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="loading px-10 min-h-screen flex items-center justify-center bg-gray-50">
         <svg width="64px" height="48px">
           <polyline
             points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24"
@@ -58,6 +59,12 @@ const DonationRequests = () => {
       (request) =>
         new Date(request.donationDate).toDateString() ===
         new Date(selectedDate).toDateString()
+    );
+  }
+
+  if (selectedBloodGroup) {
+    filteredRequests = filteredRequests.filter(
+      (request) => request.bloodGroup === selectedBloodGroup
     );
   }
 
@@ -91,9 +98,9 @@ const DonationRequests = () => {
         </motion.p>
       </div>
 
-      {/* Sorting Buttons - Date Picker & Blood Group */}
+      {/* Sorting & Filtering Section */}
       <div className="flex justify-between items-center mb-6">
-        {/* Date Picker for Sorting */}
+        {/* Date Picker for Filtering */}
         <div className="flex items-center gap-2">
           <label className="text-gray-700 font-semibold">Select Date:</label>
           <input
@@ -104,15 +111,25 @@ const DonationRequests = () => {
           />
         </div>
 
-        {/* Sort by Blood Group Button */}
-        <motion.button
-          className="btn bg-green-600 text-white px-4 py-2 rounded-lg"
-          whileHover={{ scale: 1.1, backgroundColor: "#059669" }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setSortBy("bloodGroup")}
-        >
-          Sort by Blood Group
-        </motion.button>
+        {/* Blood Group Selector */}
+        <div className="flex items-center gap-2">
+          <label className="text-gray-700 font-semibold">Blood Group:</label>
+          <select
+            className="border border-gray-300 px-2 py-1 rounded-lg"
+            value={selectedBloodGroup}
+            onChange={(e) => setSelectedBloodGroup(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
       </div>
 
       {/* Cards Section */}
@@ -130,40 +147,21 @@ const DonationRequests = () => {
               boxShadow: "0 0 10px rgba(255, 0, 0, 0.5)",
             }}
             whileTap={{ scale: 0.98 }}
-            style={{ border: "2px solid #ddd", transition: "all 0.3s ease" }}
           >
             <h3 className="font-semibold text-lg">{request.recipientName}</h3>
             <p className="text-sm text-gray-600">
               Location: {request.recipientDistrict}, {request.recipientUpazila}
             </p>
-            <p className="text-sm text-gray-600">
-              Hospital: {request.hospitalName}
-            </p>
-            <p className="text-sm text-gray-600">
-              Blood Group: {request.bloodGroup}
-            </p>
+            <p className="text-sm text-gray-600">Hospital: {request.hospitalName}</p>
+            <p className="text-sm text-gray-600">Blood Group: {request.bloodGroup}</p>
             <p className="text-sm text-gray-600">
               Date: {new Date(request.donationDate).toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-600">Time: {request.donationTime}</p>
             <motion.button
               onClick={() => handleViewRequest(request._id)}
-              className="btn w-20 mt-4"
-              style={{
-                backgroundColor: "#D32F2F",
-                borderColor: "#D32F2F",
-                color: "#fff",
-              }}
-              whileHover={{
-                scale: 1.1,
-                backgroundColor: "#C2185B",
-                borderColor: "#C2185B",
-              }}
-              whileTap={{
-                scale: 0.95,
-                backgroundColor: "#FF5C8D",
-                borderColor: "#FF5C8D",
-              }}
+              className="btn w-20 mt-4 bg-red-600 text-white rounded-lg"
+              whileHover={{ scale: 1.1, backgroundColor: "#C2185B" }}
+              whileTap={{ scale: 0.95 }}
             >
               View
             </motion.button>

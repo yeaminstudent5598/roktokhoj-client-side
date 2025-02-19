@@ -120,17 +120,8 @@ const Navbar = () => {
             {navOptions}
           </ul>
         </div>
-        <a
-          className="rounded-full border border-red-600 text-center"
-          href="/"
-        >
-          <img
-            className="w-10 h-10"
-            src="https://i.ibb.co/q9t4Kcp/roktokhoj-removebg-preview.png"
-            alt="RoktoKhoj Logo"
-          />
-        </a>
-        <h2 className="font-bold text-2xl ml-2"><span className="text-red-600">Rokto</span>Khoj</h2>
+        
+        <h2 className="font-bold text-2xl"><span className="text-red-600">Rokto</span>Khoj</h2>
       </div>
 
       {/* Navbar Center */}

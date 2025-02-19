@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const FeatureSection = () => {
     return (
-        <div className="featured-section grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-100 py-12 px-6">
+        <div className="featured-section grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-100 py-12 px-10">
             {/* Find Donation Center */}
             <div className="featured-item bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition">
                 <div className="image-container flex justify-center mb-4 text-red-700 text-5xl">
