@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAxiosPublic from "../../../Hooks/useAxiosPublic"; 
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import { FaSearch } from "react-icons/fa";
 import DOMPurify from "dompurify";
 import { useQuery } from "@tanstack/react-query";
-import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, FacebookIcon, TwitterIcon, LinkedinIcon } from "react-share"; // Import share buttons
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+} from "react-share";
 
 const PublishedBlogs = () => {
   const axiosPublic = useAxiosPublic();
@@ -46,23 +53,29 @@ const PublishedBlogs = () => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(date).toLocaleDateString(undefined, options);
   };
- 
-  if (isLoading) return <p><p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p></p>;
+
+  if (isLoading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="spinner"></div>
+      </div>
+    );
   if (isError) return <p>Error fetching blogs: {error.message}</p>;
 
   return (
     <div className="max-w-7xl mx-auto p-6 pt-24">
-      <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+      {/* Page Title */}
+      <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">
         Published Blogs
       </h2>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-8">
         <div className="relative w-full max-w-lg">
           <input
             type="text"
             placeholder="Search blogs..."
-            className="input input-bordered w-full pl-10 pr-4 py-2 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            className="input input-bordered w-full pl-10 pr-4 py-3 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
             value={searchQuery}
             onChange={handleSearch}
           />
@@ -70,39 +83,47 @@ const PublishedBlogs = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Blog Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredBlogs?.length > 0 ? (
           filteredBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="card bg-white shadow-md rounded-lg overflow-hidden"
+              className="card bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
+              {/* Blog Thumbnail */}
               <img
                 src={blog.thumbnail}
                 alt={blog.title}
-                className="w-full h-56 object-cover"
+                className="w-full h-64 object-cover"
               />
+
+              {/* Blog Content */}
               <div className="card-body p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {/* Blog Title */}
+                <h3 className="text-2xl font-bold text-gray-800 mb-3">
                   {blog.title}
                 </h3>
-                {/* Display Published Date */}
+
+                {/* Published Date */}
                 <p className="text-sm text-gray-500 mb-4">
                   Published on: {formatDate(blog.publishedDate)}
                 </p>
+
+                {/* Blog Content Preview */}
                 <div
-                  className="text-gray-600 mb-4"
+                  className="text-gray-600 mb-6"
                   dangerouslySetInnerHTML={{
                     __html:
                       DOMPurify.sanitize(blog.content.slice(0, 150)) + "...",
                   }}
                 ></div>
+
+                {/* Status and Read More Button */}
                 <div className="flex justify-between items-center">
-                  <span className="btn btn-xs badge badge-primary">
-                    {blog.status}
-                  </span>
+                 
                   <button
-                    className="btn btn-outline btn-primary btn-sm"
+                    className="btn bg-red-600 text-white btn-sm"
                     onClick={() => navigate(`/blogs/${blog._id}`)}
                   >
                     Read More
@@ -110,23 +131,28 @@ const PublishedBlogs = () => {
                 </div>
 
                 {/* Social Media Share Buttons */}
-<div className="mt-4 flex space-x-4">
-  <FacebookShareButton url={window.location.href} quote={blog.title}>
-    <FacebookIcon size={32} round />
-  </FacebookShareButton>
-  <TwitterShareButton url={window.location.href} title={blog.title}>
-    <TwitterIcon size={32} round />
-  </TwitterShareButton>
-  <LinkedinShareButton url={window.location.href}>
-    <LinkedinIcon size={32} round />
-  </LinkedinShareButton>
-</div>
-
+                <div className="mt-6 flex justify-center space-x-4">
+                  <FacebookShareButton
+                    url={window.location.href}
+                    quote={blog.title}
+                  >
+                    <FacebookIcon size={32} round className="hover:opacity-80 transition-opacity" />
+                  </FacebookShareButton>
+                  <TwitterShareButton
+                    url={window.location.href}
+                    title={blog.title}
+                  >
+                    <TwitterIcon size={32} round className="hover:opacity-80 transition-opacity" />
+                  </TwitterShareButton>
+                  <LinkedinShareButton url={window.location.href}>
+                    <LinkedinIcon size={32} round className="hover:opacity-80 transition-opacity" />
+                  </LinkedinShareButton>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 pt-20">
+          <p className="text-center text-gray-500 col-span-full py-20">
             No published blogs found.
           </p>
         )}
