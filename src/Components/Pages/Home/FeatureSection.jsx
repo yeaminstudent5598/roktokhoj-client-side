@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaTint, FaHandHoldingHeart, FaCheckCircle } from 'react-icons/fa'; // Import icons
+import { Link } from 'react-router-dom';
 
 const FeatureSection = () => {
     return (
@@ -14,14 +15,14 @@ const FeatureSection = () => {
                     Locate the nearest blood donation centers or drives in your area by entering your zip code.
                 </p>
                 <div className="text-center">
-                    <a
+                    <Link to="/dashboard/create-donation-request"
                         
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition"
                     >
                         Donate Now
-                    </a>
+                    </Link>
                 </div>
             </div>
 
@@ -35,13 +36,13 @@ const FeatureSection = () => {
                     Understand every step of the simple and life-saving blood donation process.
                 </p>
                 <div className="text-center">
-                    <a
+                    <Link to="/blog"
                         
                         target="_self"
                         className="btn bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition"
                     >
                         Learn More
-                    </a>
+                    </Link>
                 </div>
             </div>
 
@@ -55,13 +56,13 @@ const FeatureSection = () => {
                     Donating blood is easy and safe. See if you meet the criteria to donate today.
                 </p>
                 <div className="text-center">
-                    <a
+                    <Link to="blood-reserves"
                        
                         target="_self"
                         className="btn bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition"
                     >
                         Check Now
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

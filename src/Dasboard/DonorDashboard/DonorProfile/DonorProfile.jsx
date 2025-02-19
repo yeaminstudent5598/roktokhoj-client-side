@@ -66,7 +66,7 @@ const DonorProfile = () => {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+    <div className="pt-28 max-w-4xl mx-auto ">
       <div className="flex items-center space-x-4 pb-6 border-b border-gray-300">
         <div className="avatar">
           <div className="w-20 h-20 rounded-full ring ring-orange-400 ring-offset-2">

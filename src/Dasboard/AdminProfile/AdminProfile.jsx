@@ -78,7 +78,7 @@ const AdminProfile = () => {
   }
 
   return (
-    <div className="container mx-auto p-10">
+    <div className="container mx-auto pt-28">
   {/* Avatar Container */}
   <div className="w-32 h-32 flex justify-center items-center rounded-full border-4 border-primary overflow-hidden mx-auto">
     <img

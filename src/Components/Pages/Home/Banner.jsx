@@ -43,7 +43,7 @@ const Banner = () => {
               transition={{ duration: 0.5 }}
             >
               <Link to="/dashboard">
-                <button className="btn btn-primary">Join as a Donor</button>
+                <button className="btn border border-red-600 bg-red-600 text-white ">Join as a Donor</button>
               </Link>
             </motion.div>
             <motion.div
@@ -52,7 +52,7 @@ const Banner = () => {
               transition={{ duration: 0.5 }}
             >
               <Link to="/search">
-                <button className="btn btn-secondary">Search Donors</button>
+                <button className="btn btn-outline text-white">Search Donors</button>
               </Link>
             </motion.div>
           </div>

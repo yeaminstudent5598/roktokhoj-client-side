@@ -94,7 +94,7 @@ const CreateDonationRequest = () => {
 
     axiosSecure
       .post("/create-donation-request", donationRequest)
-      .then(() => { 
+      .then(() => {
         Swal.fire({
           title: "Success!",
           text: "Your donation request has been created successfully.",
@@ -118,34 +118,32 @@ const CreateDonationRequest = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-       {/* New Top Section */}
-<div className="flex justify-center items-center bg-red-600 text-white  rounded-t-lg">
-   {/* Left Side Image */}
-   <div className="flex-shrink-0">
-        <img
-          src="https://i.ibb.co/LtN4Pnc/Red-White-Blood-Donation-Instagram-Story-65b38a70e5df28-24233776.png"
-
-          alt="Blood Donation"
-          className="w-[240px] "
-        />
-      </div>
-  {/* Right Side Content */}
-  <div className="ml-4 flex flex-col">
-        <div className="flex items-center gap-2">
-          <FaHeart className="text-white text-2xl" />
-          <h1 className="text-2xl font-bold">Create Donation Request</h1>
+    <div className="max-w-4xl mx-auto p-4 mt-24 bg-white shadow-lg rounded-lg">
+      {/* Top Section */}
+      <div className="flex flex-col md:flex-row justify-center items-center bg-red-600 text-white rounded-t-lg p-4">
+        {/* Left Side Image */}
+        <div className="flex-shrink-0">
+          <img
+            src="https://i.ibb.co/LtN4Pnc/Red-White-Blood-Donation-Instagram-Story-65b38a70e5df28-24233776.png"
+            alt="Blood Donation"
+            className="w-48 md:w-60"
+          />
         </div>
-        <p className="text-sm  mt-2">
-          Confidential - Please answer the following questions correctly. This
-          will help to protect you and the patient who receives your blood.
-        </p>
+        {/* Right Side Content */}
+        <div className="ml-0 md:ml-4 mt-4 md:mt-0 text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-2">
+            <FaHeart className="text-white text-2xl" />
+            <h1 className="text-2xl font-bold">Create Donation Request</h1>
+          </div>
+          <p className="text-sm mt-2">
+            Confidential - Please answer the following questions correctly. This
+            will help to protect you and the patient who receives your blood.
+          </p>
+        </div>
       </div>
-  
-</div>
 
-      <h2 className="text-3xl font-bold text-center mb-6"></h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Form Section */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
         {/* Requester Information */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -274,6 +272,7 @@ const CreateDonationRequest = () => {
           ></textarea>
         </div>
 
+        {/* Submit Button */}
         <button type="submit" className="btn btn-primary w-full">
           Submit Request
         </button>
