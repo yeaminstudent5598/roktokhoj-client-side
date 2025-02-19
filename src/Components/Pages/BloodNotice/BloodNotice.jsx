@@ -5,7 +5,7 @@ const BloodNotice = () => {
   const [activeTab, setActiveTab] = useState('redBloodCells');
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+    <div className="bg-white py-8 px-10 rounded-lg shadow-lg">
       <dl className="space-y-8">
         <dt className="text-3xl font-bold text-gray-900 text-center">
           Creating a happy blood donation, <br />

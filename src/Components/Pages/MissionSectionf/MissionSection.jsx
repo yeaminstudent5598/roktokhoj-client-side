@@ -2,8 +2,8 @@ import React from 'react';
 
 const MissionSection = () => {
   return (
-    <section className="w-full bg-white py-20">
-      <div className="container mx-auto px-4">
+    <section className="w-full px-10 bg-white py-20">
+      <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row-reverse items-center">
           {/* Image Section */}
           <div className="w-full lg:w-1/2 overflow-hidden rounded-lg shadow-lg">

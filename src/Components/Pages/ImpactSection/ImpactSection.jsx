@@ -3,7 +3,7 @@ import React from 'react';
 const ImpactSection = () => {
   return (
     <section className="w-full  px-10 py-20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Image Section */}
           <div className="w-full lg:w-1/2 overflow-hidden">
