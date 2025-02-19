@@ -67,7 +67,7 @@ const ContentManagement = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-6 mt-28">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-semibold">Content Management</h2>

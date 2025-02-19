@@ -54,7 +54,7 @@ const AddBlog = () => {
   
 
   return (
-    <div className="p-8">
+    <div className="p-6 mt-28">
       <h2 className="text-3xl font-semibold mb-6">Add Blog</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
