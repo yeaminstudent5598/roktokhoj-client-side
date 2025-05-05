@@ -69,19 +69,19 @@ const BloodReserves = () => {
 
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
       <div className="flex items-center gap-2">
-          <label className="text-gray-700 font-semibold">Search Location:</label>
+          <label className="text-gray-700 font-semibold">Location:</label>
           <input
             type="text"
-            className="border border-gray-300 px-2 py-1 rounded-lg"
+            className="border w-full border-gray-300 px-2 py-1 rounded-lg"
             placeholder="Search by location"
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-gray-700 font-semibold">Blood Group:</label>
+          <label className="text-gray-700 font-semibold">Blood:</label>
           <select
-            className="border border-gray-300 px-2 py-1 rounded-lg"
+            className="border border-gray-300 w-full px-2 py-1 rounded-lg"
             value={selectedBloodGroup}
             onChange={(e) => setSelectedBloodGroup(e.target.value)}
           >
@@ -104,7 +104,7 @@ const BloodReserves = () => {
         {filteredUsers.map((user) => (
           <motion.div
             key={user._id}
-            className="card p-4 shadow-md bg-white rounded-lg border-2 border-gray-300"
+            className="card dark:bg-gray-900 p-4 shadow-md bg-white rounded-lg border-2 border-gray-300"
             whileHover={{ scale: 1.05, boxShadow: "0 0 10px rgba(255, 0, 0, 0.5)" }}
             whileTap={{ scale: 0.98 }}
           >

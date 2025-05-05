@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Import Framer Motion
 
 const Banner = () => {
-  return (
-    <div className="relative min-h-screen">
+  return ( 
+    <div className="pt-14">
+      <div className="relative min-h-screen">
       {/* Background Image */}
       <img
         className="absolute top-0 left-0 w-full h-full object-cover"
@@ -19,7 +20,7 @@ const Banner = () => {
           transition={{ duration: 1 }} // Fade-in effect
         >
           <motion.h1
-            className="mb-5 text-5xl font-bold"
+            className="mb-5 text-white text-5xl font-bold"
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -27,7 +28,7 @@ const Banner = () => {
             SMS-based platform to connect blood searchers with donors
           </motion.h1>
           <motion.p
-            className="mb-5"
+            className="mb-5 text-white"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -58,6 +59,7 @@ const Banner = () => {
           </div>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 };

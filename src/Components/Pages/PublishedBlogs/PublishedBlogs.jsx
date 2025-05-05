@@ -84,35 +84,31 @@ const PublishedBlogs = () => {
       </div>
 
       {/* Blog Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredBlogs?.length > 0 ? (
           filteredBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="card bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              className="card bg-white dark:bg-gray-900  shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               {/* Blog Thumbnail */}
               <img
                 src={blog.thumbnail}
                 alt={blog.title}
-                className="w-full h-64 object-cover"
+                className="w-full  h-64 object-cover"
               />
 
               {/* Blog Content */}
               <div className="card-body p-6">
                 {/* Blog Title */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                <h3 className="text-2xl dark:text-white font-bold text-gray-800 mb-3">
                   {blog.title}
                 </h3>
 
-                {/* Published Date */}
-                <p className="text-sm text-gray-500 mb-4">
-                  Published on: {formatDate(blog.publishedDate)}
-                </p>
-
+                
                 {/* Blog Content Preview */}
                 <div
-                  className="text-gray-600 mb-6"
+                  className="text-gray-600 dark:text-white mb-6"
                   dangerouslySetInnerHTML={{
                     __html:
                       DOMPurify.sanitize(blog.content.slice(0, 150)) + "...",

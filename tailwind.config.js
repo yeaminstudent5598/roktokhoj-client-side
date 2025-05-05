@@ -4,11 +4,19 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
+    },
   },
   plugins: [
     require('daisyui'),
   ],
+  daisyui: {
+    themes: ["light", "dark"]
+  },
 }
 

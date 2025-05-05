@@ -121,7 +121,7 @@ const FundingPage = () => {
 
 
   return (
-    <div className="container mx-auto py-20 px-4">
+    <div className="container  mx-auto py-20 px-4">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Funding Page</h1>
@@ -142,15 +142,15 @@ const FundingPage = () => {
 
       {/* Table of Funds */}
       {isLoading ? (
-         <div className="loading min-h-screen flex items-center justify-center bg-gray-50">
+         <div className="loading  min-h-screen flex items-center justify-center bg-gray-50">
          <p className="min-h-screen flex items-center justify-center bg-gray-50"><div class="spinner"></div></p>
        </div>
       ) : isError ? (
         <p>Error loading data. Please try again later.</p>
       ) : (
-        <table className="w-full border border-gray-200 bg-white rounded-lg shadow-md overflow-hidden">
+        <table className="w-full dark:bg-gray-900 border border-gray-200 bg-white rounded-lg shadow-md overflow-hidden">
   <thead>
-    <tr className="bg-gray-50 text-center text-gray-700 font-semibold">
+    <tr className="bg-gray-50 dark:bg-gray-900 text-center text-gray-700 font-semibold">
       <th className="py-3 px-6 border-b">User</th>
       <th className="py-3 px-6 border-b">Amount</th>
       <th className="py-3 px-6 border-b">Date</th>
@@ -162,7 +162,7 @@ const FundingPage = () => {
         key={index}
         className={`${
           index % 2 === 0 ? "bg-white" : "bg-gray-50"
-        } hover:bg-blue-50 transition-colors`}
+        } hover:bg-blue-50 transition-colors dark:bg-gray-900`}
       >
         <td className="py-3 px-6 border-b text-gray-700">{fund.customer}</td>
         <td className="py-3 px-6 border-b text-gray-700 font-medium">
@@ -182,7 +182,7 @@ const FundingPage = () => {
       {/* Fund Modal */}
       {isFundModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Donate Funds</h2>
             <form onSubmit={handleDonation}>
               <div className="mb-4">

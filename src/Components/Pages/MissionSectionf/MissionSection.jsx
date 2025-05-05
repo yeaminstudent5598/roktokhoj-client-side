@@ -2,7 +2,7 @@ import React from 'react';
 
 const MissionSection = () => {
   return (
-    <section className="w-full px-10 bg-white py-20">
+    <section className="w-full dark:bg-gray-900 px-10 bg-white py-20">
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row-reverse items-center">
           {/* Image Section */}
@@ -12,7 +12,7 @@ const MissionSection = () => {
               alt="Our Commitment"
               className="w-full h-auto object-cover"
             />
-          </div>
+          </div> 
 
           {/* Content Section */}
           <div className="w-full lg:w-1/2 lg:pr-12 mt-10 lg:mt-0">

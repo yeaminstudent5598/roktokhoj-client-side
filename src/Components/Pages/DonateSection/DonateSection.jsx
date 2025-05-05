@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const DonateSection = () => {
-  return (
+  return ( 
     <div className="px-10 grid grid-cols-1 md:grid-cols-3 gap-4 justify-center">
       <div className=" mb-4">
         <div className="card w-full bg-base-100 shadow-xl">
@@ -20,7 +21,7 @@ const DonateSection = () => {
               </p>
               </div>
             </div>
-            <a href="blog-details.html" className="btn btn-primary mt-4 w-full">Read More</a>
+            <Link to="/dashboard/create-donation-request" className="btn btn-primary mt-4 w-full">Read More</Link>
           </div>
         </div>
       </div>
@@ -42,7 +43,7 @@ const DonateSection = () => {
               </p>
              </div>
             </div>
-            <a href="blog-details.html" className="btn btn-primary mt-4 w-full">Read More</a>
+            <Link to="/blog" className="btn btn-primary mt-4 w-full">Read More</Link>
           </div>
         </div>
       </div>
@@ -64,7 +65,7 @@ const DonateSection = () => {
               </p>
               </div>
             </div>
-            <a href="blog-details.html" className="btn btn-primary mt-4 w-full">Read More</a>
+            <Link to="/blog" className="btn btn-primary mt-4 w-full">Read More</Link>
           </div>
         </div>
       </div>
