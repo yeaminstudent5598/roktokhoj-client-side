@@ -8,7 +8,7 @@ const LandingPage = () => {
       <div className="text-center mt-6 text-gray-700 text-lg">
         <p>Our current blood stock is at</p>
       </div>
-
+ 
       <div className="flex justify-center gap-12 mt-6">
         <div className="text-center">
           <p className="font-semibold">B+</p>

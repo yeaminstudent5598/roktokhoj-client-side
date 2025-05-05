@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { MdDashboard } from "react-icons/md";
@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import useAuth from "../../../Hooks/useAuth";
 import useAdmin from "../../../Hooks/useAdmin";
 import useValunteer from "../../../Hooks/useVolunteer";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 
 
@@ -13,6 +14,38 @@ const Navbar = () => {
   const { user, logOut } = useAuth();
   const [isAdmin] = useAdmin();
   const [isValunteer] = useValunteer();
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") || "light" 
+  );
+   // Sync theme with DOM and localStorage on initial render
+   useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || "light";
+    setTheme(storedTheme); 
+    if (storedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, []);
+
+  // Update theme in DOM and localStorage when `theme` state changes
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light"; 
+    setTheme(newTheme);
+  };
 
   const handleLogout = () => {
     logOut()
@@ -93,11 +126,11 @@ const Navbar = () => {
   
 
   return (
-    <div className="navbar w-full px-10 fixed bg-opacity-70 bg-white z-10 shadow-lg">
+    <div className="navbar w-full dark:bg-gray-900 px-10 fixed bg-white z-50 shadow-lg">
       {/* Navbar Start */}
-      <div className="navbar-start">
+      <div className="navbar-start gap-2">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div tabIndex={0} role="button" className=" lg:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -121,7 +154,7 @@ const Navbar = () => {
           </ul>
         </div>
         
-        <h2 className="font-bold text-2xl"><span className="text-red-600">Rokto</span>Khoj</h2>
+        <h2 className="font-bold md:text-2xl"><span className="text-red-600">Rokto</span>Khoj</h2>
       </div>
 
       {/* Navbar Center */}
@@ -131,6 +164,18 @@ const Navbar = () => {
 
       {/* Navbar End */}
       <div className="navbar-end">
+      <label className="swap mr-2 swap-rotate">
+          <input
+            type="checkbox"
+            className="theme-controller "
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+          />
+         {theme === "light" ? <FaMoon className="  h-6 w-6"/> :  
+          <FaSun className=" text-white h-6 w-6 fill-current" />}
+
+         
+        </label>
         {user ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -169,11 +214,11 @@ const Navbar = () => {
             to="/login"
             className={({ isActive }) =>
               isActive
-                ? "btn btn-primary ml-2"
-                : "btn btn-outline btn-primary ml-2"
+                ? "btn btn-primary "
+                : "btn btn-outline btn-primary "
             }
           >
-            Login/Register
+            Login
           </NavLink>
         )}
       </div>

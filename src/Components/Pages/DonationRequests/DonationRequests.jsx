@@ -99,13 +99,13 @@ const DonationRequests = () => {
       </div>
 
       {/* Sorting & Filtering Section */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="md:flex md:justify-between  items-center mb-6">
         {/* Date Picker for Filtering */}
-        <div className="flex items-center gap-2">
-          <label className="text-gray-700 font-semibold">Select Date:</label>
+        <div className="flex items-center mb-6 gap-2">
+          <label className="text-gray-700 font-semibold">Date:</label>
           <input
             type="date"
-            className="border border-gray-300 px-2 py-1 rounded-lg"
+            className="border border-gray-300 w-full px-2 py-1 rounded-lg"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
           />
@@ -113,9 +113,9 @@ const DonationRequests = () => {
 
         {/* Blood Group Selector */}
         <div className="flex items-center gap-2">
-          <label className="text-gray-700 font-semibold">Blood Group:</label>
+          <label className="text-gray-700 font-semibold">Blood:</label>
           <select
-            className="border border-gray-300 px-2 py-1 rounded-lg"
+            className="border border-gray-300 px-2 py-1 w-full rounded-lg"
             value={selectedBloodGroup}
             onChange={(e) => setSelectedBloodGroup(e.target.value)}
           >
@@ -137,7 +137,7 @@ const DonationRequests = () => {
         {sortedRequests?.map((request) => (
           <motion.div
             key={request._id}
-            className="card p-4 shadow-md bg-white rounded-lg"
+            className="card p-4 dark:bg-gray-900 shadow-md bg-white rounded-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

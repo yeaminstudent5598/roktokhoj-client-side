@@ -5,15 +5,15 @@ const BloodNotice = () => {
   const [activeTab, setActiveTab] = useState('redBloodCells');
 
   return (
-    <div className="bg-white py-8 px-10 rounded-lg shadow-lg">
+    <div className="bg-white dark:bg-gray-900 py-8 px-10 rounded-lg shadow-lg">
       <dl className="space-y-8">
-        <dt className="text-3xl font-bold text-gray-900 text-center">
+        <dt className="text-3xl dark:text-white font-bold text-gray-900 text-center">
           Creating a happy blood donation, <br />
           <strong className="text-blue-600">safe blood transfusion, and a better future together</strong>
         </dt>
-        <dd>
+        <dd> 
           {/* Tabs */}
-          <div className="flex justify-center space-x-4 border-b border-gray-200">
+          <div className="flex justify-center space-x-4 dark:bg-gray-900 border-b border-gray-200">
             <button
               className={`px-4 py-2 text-lg font-semibold ${
                 activeTab === 'redBloodCells'

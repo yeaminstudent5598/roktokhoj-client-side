@@ -40,14 +40,14 @@ if (user) {
 }
     return (
         <div>
-          <div className="hero bg-red-500 min-h-screen">
+          <div className="hero dark:bg-gray-900 bg-red-500 min-h-screen">
   <div className="hero-content text-center text-white flex-col lg:flex-row">
     <div className="lg:w-1/2 px-6">
       <h1 className="text-5xl font-bold mb-4">Welcome to RoktoKhoj</h1>
       <p className="mb-6">Join us in saving lives. Donate blood and make a difference in someone’s life today.</p>
       <a href="#about" className="btn btn-outline btn-white">Learn More</a>
     </div>
-    <div className="lg:w-1/2 bg-white p-8 rounded-lg shadow-lg">
+    <div className="lg:w-1/2 dark:bg-gray-900 bg-white p-8 rounded-lg shadow-lg">
       <h2 className="text-3xl font-semibold mb-4">Login to Start</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <div className="form-control">
